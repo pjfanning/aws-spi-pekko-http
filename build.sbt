@@ -5,6 +5,8 @@ ThisBuild / scalaVersion := crossScalaVersions.value.last
 ThisBuild / githubWorkflowJavaVersions := Seq("adopt@1.8")
 ThisBuild / githubWorkflowPublishTargetBranches := Nil
 
+ThisBuild / resolvers += "Apache Nexus Snapshots".at("https://repository.apache.org/content/repositories/snapshots/")
+
 lazy val commonSettings = Seq(
   scalacOptions ++= Seq(
     "-target:jvm-1.8",
@@ -52,12 +54,12 @@ lazy val root = (project in file("."))
 
 lazy val deps = {
   val awsSDKVersion = "2.11.4"
-  val akkaVersion = "2.6.20"
-  val AkkaHttpVersion = "10.2.9"
+  val pekkoVersion = "0.0.0+26610-defddc6a-SNAPSHOT"
+  val pekkoHttpVersion = "0.0.0+4311-07201517-SNAPSHOT"
 
   Seq(
-    "com.typesafe.akka"       %% "akka-stream"             % akkaVersion,
-    "com.typesafe.akka"       %% "akka-http"               % AkkaHttpVersion,
+    "org.apache.pekko"        %% "pekko-stream"            % pekkoVersion,
+    "org.apache.pekko"        %% "pekko-http"              % pekkoHttpVersion,
     "software.amazon.awssdk"  %  "http-client-spi"         % awsSDKVersion,
     "org.scala-lang.modules"  %% "scala-collection-compat" % "2.7.0",
 
@@ -69,11 +71,11 @@ lazy val deps = {
 
     "com.dimafeng"            %% "testcontainers-scala"    % "0.40.7"        % "test",
 
-    "junit"                   %  "junit"                   % "4.13.2"          % "test",
+    "junit"                   %  "junit"                   % "4.13.2"        % "test",
 
     "org.scala-lang.modules"  %% "scala-java8-compat"      % "1.0.2"         % "it,test",
-    "org.scalatest"           %% "scalatest"               % "3.2.12"         % "it,test",
-    "org.scalatestplus"       %% "scalatestplus-junit"     % "1.0.0-M2"      % "it,test",
-    "ch.qos.logback"          %  "logback-classic"         % "1.2.11"         % "it,test"
+    "org.scalatest"           %% "scalatest"               % "3.2.15"        % "it,test",
+    "org.scalatestplus"       %% "junit-4-13"              % "3.2.15.0"      % "it,test",
+    "ch.qos.logback"          %  "logback-classic"         % "1.2.11"        % "it,test"
   )
 }

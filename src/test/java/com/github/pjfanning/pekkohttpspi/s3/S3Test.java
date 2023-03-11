@@ -16,7 +16,7 @@
 
 package com.github.pjfanning.pekkohttpspi.s3;
 
-import akka.actor.ActorSystem;
+import org.apache.pekko.actor.ActorSystem;
 import com.github.pjfanning.pekkohttpspi.PekkoHttpAsyncHttpService;
 import org.junit.Rule;
 import org.junit.Test;

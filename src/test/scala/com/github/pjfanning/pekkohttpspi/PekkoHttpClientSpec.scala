@@ -16,8 +16,8 @@
 
 package com.github.pjfanning.pekkohttpspi
 
-import akka.http.scaladsl.model.headers.`Content-Type`
-import akka.http.scaladsl.model.MediaTypes
+import org.apache.pekko.http.scaladsl.model.headers.`Content-Type`
+import org.apache.pekko.http.scaladsl.model.MediaTypes
 import org.scalatest.OptionValues
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec

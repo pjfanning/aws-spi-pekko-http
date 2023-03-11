@@ -18,11 +18,11 @@ package com.github.pjfanning.pekkohttpspi
 
 import java.util.concurrent.CompletableFuture
 
-import akka.actor.ActorSystem
-import akka.http.scaladsl.model.{ContentTypes, HttpResponse}
-import akka.http.scaladsl.model.headers.{`Content-Length`, `Content-Type`}
-import akka.stream.Materializer
-import akka.stream.scaladsl.{Keep, Sink}
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.http.scaladsl.model.{ContentTypes, HttpResponse}
+import org.apache.pekko.http.scaladsl.model.headers.{`Content-Length`, `Content-Type`}
+import org.apache.pekko.stream.Materializer
+import org.apache.pekko.stream.scaladsl.{Keep, Sink}
 import org.slf4j.LoggerFactory
 import software.amazon.awssdk.http.SdkHttpFullResponse
 import software.amazon.awssdk.http.async.SdkAsyncHttpResponseHandler

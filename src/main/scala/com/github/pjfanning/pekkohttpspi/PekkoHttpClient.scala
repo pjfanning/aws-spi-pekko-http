@@ -18,18 +18,18 @@ package com.github.pjfanning.pekkohttpspi
 
 import java.util.concurrent.{CompletableFuture, TimeUnit}
 
-import akka.actor.{ActorSystem, ClassicActorSystemProvider}
-import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.HttpHeader.ParsingResult
-import akka.http.scaladsl.model.HttpHeader.ParsingResult.Ok
-import akka.http.scaladsl.model.MediaType.Compressible
-import akka.http.scaladsl.model.RequestEntityAcceptance.Expected
-import akka.http.scaladsl.model._
-import akka.http.scaladsl.model.headers.{`Content-Length`, `Content-Type`}
-import akka.http.scaladsl.settings.ConnectionPoolSettings
-import akka.stream.scaladsl.Source
-import akka.stream.{ActorMaterializer, Materializer, SystemMaterializer}
-import akka.util.ByteString
+import org.apache.pekko.actor.{ActorSystem, ClassicActorSystemProvider}
+import org.apache.pekko.http.scaladsl.Http
+import org.apache.pekko.http.scaladsl.model.HttpHeader.ParsingResult
+import org.apache.pekko.http.scaladsl.model.HttpHeader.ParsingResult.Ok
+import org.apache.pekko.http.scaladsl.model.MediaType.Compressible
+import org.apache.pekko.http.scaladsl.model.RequestEntityAcceptance.Expected
+import org.apache.pekko.http.scaladsl.model._
+import org.apache.pekko.http.scaladsl.model.headers.{`Content-Length`, `Content-Type`}
+import org.apache.pekko.http.scaladsl.settings.ConnectionPoolSettings
+import org.apache.pekko.stream.scaladsl.Source
+import org.apache.pekko.stream.{ActorMaterializer, Materializer, SystemMaterializer}
+import org.apache.pekko.util.ByteString
 import org.slf4j.LoggerFactory
 import software.amazon.awssdk.http.async._
 import software.amazon.awssdk.http.SdkHttpRequest
