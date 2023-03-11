@@ -28,13 +28,10 @@ lazy val commonSettings = Seq(
 lazy val IntegrationTest = config("it") extend Test
 
 lazy val root = (project in file("."))
-  .enablePlugins(AutomateHeaderPlugin)
   .configs(IntegrationTest)
   .settings(
     commonSettings,
     Defaults.itSettings,
-    automateHeaderSettings(Test, IntegrationTest),
-    headerSettings(Test, IntegrationTest),
     libraryDependencies ++= deps,
     fork in Test := true,
     releasePublishArtifactsAction := PgpKeys.publishSigned.value,
