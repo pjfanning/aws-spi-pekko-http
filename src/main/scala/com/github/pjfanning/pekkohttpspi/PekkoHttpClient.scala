@@ -65,7 +65,7 @@ object PekkoHttpClient {
 
   val logger = LoggerFactory.getLogger(this.getClass)
 
-  private[akkahttpspi] def toAkkaRequest(request: SdkHttpRequest, contentPublisher: SdkHttpContentPublisher): HttpRequest = {
+  private[pekkohttpspi] def toAkkaRequest(request: SdkHttpRequest, contentPublisher: SdkHttpContentPublisher): HttpRequest = {
     val (contentTypeHeader, reqheaders) = convertHeaders(request.headers())
     val method = convertMethod(request.method().name())
     HttpRequest(
@@ -77,7 +77,7 @@ object PekkoHttpClient {
     )
   }
 
-  private[akkahttpspi] def entityForMethodAndContentType(method: HttpMethod,
+  private[pekkohttpspi] def entityForMethodAndContentType(method: HttpMethod,
                                                          contentType: ContentType,
                                                          contentPublisher: SdkHttpContentPublisher): RequestEntity =
     method.requestEntityAcceptance match {
@@ -88,13 +88,13 @@ object PekkoHttpClient {
       case _ => HttpEntity.Empty
     }
 
-  private[akkahttpspi] def convertMethod(method: String): HttpMethod =
+  private[pekkohttpspi] def convertMethod(method: String): HttpMethod =
     HttpMethods
       .getForKeyCaseInsensitive(method)
       .getOrElse(throw new IllegalArgumentException(s"Method not configured: $method"))
 
 
-  private[akkahttpspi] def contentTypeHeaderToContentType(contentTypeHeader: Option[HttpHeader]): ContentType =
+  private[pekkohttpspi] def contentTypeHeaderToContentType(contentTypeHeader: Option[HttpHeader]): ContentType =
     contentTypeHeader
       .map(_.value())
       .map(v => contentTypeMap.getOrElse(v, tryCreateCustomContentType(v)))
@@ -108,7 +108,7 @@ object PekkoHttpClient {
       .getOrElse(ContentTypes.NoContentType)
 
   // This method converts the headers to Akka-http headers and drops content-length and returns content-type separately
-  private[akkahttpspi] def convertHeaders(headers: java.util.Map[String, java.util.List[String]]): (Option[HttpHeader], immutable.Seq[HttpHeader]) =
+  private[pekkohttpspi] def convertHeaders(headers: java.util.Map[String, java.util.List[String]]): (Option[HttpHeader], immutable.Seq[HttpHeader]) =
     headers.asScala.foldLeft((Option.empty[HttpHeader], List.empty[HttpHeader])) { case ((ctHeader, hdrs), header) =>
       val (headerName, headerValue) = header
       if (headerValue.size() != 1) {
@@ -127,7 +127,7 @@ object PekkoHttpClient {
       }
     }
 
-  private[akkahttpspi] def tryCreateCustomContentType(contentTypeStr: String): ContentType = {
+  private[pekkohttpspi] def tryCreateCustomContentType(contentTypeStr: String): ContentType = {
     logger.debug(s"Try to parse content type from $contentTypeStr")
     val mainAndsubType = contentTypeStr.split('/')
     if (mainAndsubType.length == 2)

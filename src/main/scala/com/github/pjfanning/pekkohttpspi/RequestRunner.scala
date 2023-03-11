@@ -56,7 +56,7 @@ class RequestRunner()(implicit sys: ActorSystem, ec: ExecutionContext, mat: Mate
     FutureConverters.toJava(result.map(_ => null: Void)).toCompletableFuture
   }
 
-  private[akkahttpspi] def toSdkHttpFullResponse(response: HttpResponse): SdkHttpFullResponse = {
+  private[pekkohttpspi] def toSdkHttpFullResponse(response: HttpResponse): SdkHttpFullResponse = {
     SdkHttpFullResponse.builder()
       .headers(convertToSdkResponseHeaders(response).map { case (k, v) => k -> v.asJava }.asJava)
       .statusCode(response.status.intValue())
@@ -64,7 +64,7 @@ class RequestRunner()(implicit sys: ActorSystem, ec: ExecutionContext, mat: Mate
       .build
   }
 
-  private[akkahttpspi] def convertToSdkResponseHeaders(response: HttpResponse): Map[String, Seq[String]] = {
+  private[pekkohttpspi] def convertToSdkResponseHeaders(response: HttpResponse): Map[String, Seq[String]] = {
     val contentType = response.entity.contentType match {
       case ContentTypes.NoContentType => Map.empty[String, List[String]]
       case contentType => Map(`Content-Type`.name -> List(contentType.value))
