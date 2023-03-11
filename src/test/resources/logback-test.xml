@@ -34,7 +34,7 @@
     <logger name="com.github.dockerjava" level="info" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
-    <logger name="com.matsluni" level="debug" additivity="false">
+    <logger name="com.github.pjfanning" level="debug" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
     <logger name="software.amazon" level="error" additivity="false">
