@@ -9,6 +9,19 @@ ThisBuild / githubWorkflowPublishTargetBranches := Seq(
   RefPredicate.Equals(Ref.Branch("main")),
   RefPredicate.StartsWith(Ref.Tag("v"))
 )
+ThisBuild / githubWorkflowPublish := Seq(
+  WorkflowStep.Sbt(
+    List("ci-release"),
+    env = Map(
+      "PGP_PASSPHRASE" -> "${{ secrets.PGP_PASSPHRASE }}",
+      "PGP_SECRET" -> "${{ secrets.PGP_SECRET }}",
+      "SONATYPE_PASSWORD" -> "${{ secrets.CI_DEPLOY_PASSWORD }}",
+      "SONATYPE_USERNAME" -> "${{ secrets.CI_DEPLOY_USERNAME }}",
+      "CI_SNAPSHOT_RELEASE" -> "+publishSigned"
+    )
+  )
+)
+
 ThisBuild / mimaPreviousArtifacts := Set.empty
 ThisBuild / resolvers += "Apache Nexus Snapshots".at("https://repository.apache.org/content/repositories/snapshots/")
 

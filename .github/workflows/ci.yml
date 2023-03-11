@@ -139,9 +139,10 @@ jobs:
           tar xf targets.tar
           rm targets.tar
 
-      - name: Publish
-        env:
-          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-          SONATYPE_CREDENTIAL_HOST: ${{ secrets.SONATYPE_CREDENTIAL_HOST }}
-        run: sbt '++ ${{ matrix.scala }}' tlRelease
+      - env:
+          CI_SNAPSHOT_RELEASE: +publishSigned
+          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+          SONATYPE_PASSWORD: ${{ secrets.CI_DEPLOY_PASSWORD }}
+          SONATYPE_USERNAME: ${{ secrets.CI_DEPLOY_USERNAME }}
+          PGP_SECRET: ${{ secrets.PGP_SECRET }}
+        run: sbt '++ ${{ matrix.scala }}' ci-release
