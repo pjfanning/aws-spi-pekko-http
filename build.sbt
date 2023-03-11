@@ -5,8 +5,10 @@ ThisBuild / crossScalaVersions := List("2.12.15", "2.13.8")
 ThisBuild / scalaVersion := crossScalaVersions.value.last
 
 ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec(Temurin, "8"))
-ThisBuild / githubWorkflowPublishTargetBranches := Nil
-
+ThisBuild / githubWorkflowPublishTargetBranches := Seq(
+  RefPredicate.Equals(Ref.Branch("main")),
+  RefPredicate.StartsWith(Ref.Tag("v"))
+)
 ThisBuild / resolvers += "Apache Nexus Snapshots".at("https://repository.apache.org/content/repositories/snapshots/")
 
 lazy val commonSettings = Seq(
