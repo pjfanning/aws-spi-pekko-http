@@ -1,3 +1,2 @@
-addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.1")
-addSbtPlugin("com.github.gseitz" % "sbt-release" % "1.0.10")
-addSbtPlugin("com.codecommit" % "sbt-github-actions" % "0.12.0")
+addSbtPlugin("org.typelevel" % "sbt-typelevel-sonatype-ci-release" % "0.5.0-M9")
+addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.5.10")

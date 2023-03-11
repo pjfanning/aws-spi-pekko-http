@@ -1,8 +1,10 @@
+import org.typelevel.sbt.gha.JavaSpec.Distribution.Temurin
+
 ThisBuild / organization := "com.github.pjfanning"
 ThisBuild / crossScalaVersions := List("2.12.15", "2.13.8")
 ThisBuild / scalaVersion := crossScalaVersions.value.last
 
-ThisBuild / githubWorkflowJavaVersions := Seq("adopt@1.8")
+ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec(Temurin, "8"))
 ThisBuild / githubWorkflowPublishTargetBranches := Nil
 
 ThisBuild / resolvers += "Apache Nexus Snapshots".at("https://repository.apache.org/content/repositories/snapshots/")
@@ -35,14 +37,9 @@ lazy val root = (project in file("."))
     commonSettings,
     Defaults.itSettings,
     libraryDependencies ++= deps,
-    fork in Test := true,
-    releasePublishArtifactsAction := PgpKeys.publishSigned.value,
-    useGpg := false,
-    pgpPublicRing := file(Path.userHome.absolutePath + "/.gnupg/pubring.gpg"),
-    pgpSecretRing := file(Path.userHome.absolutePath + "/.gnupg/secring.gpg"),
-    pgpPassphrase := sys.env.get("PGP_PASS").map(_.toArray),
+    Test / fork := true,
     publishMavenStyle := true,
-    publishArtifact in Test := false,
+    Test / publishArtifact := false,
     pomIncludeRepository := (_ => false),
     publishTo := Some(
       if (version.value.trim.endsWith("SNAPSHOT"))
