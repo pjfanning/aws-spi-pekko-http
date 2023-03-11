@@ -1,4 +1,4 @@
-# AWS Akka-Http SPI implementation 
+# AWS Pekko-Http SPI implementation 
 
 [![Continuous Integration](https://github.com/matsluni/aws-spi-akka-http/actions/workflows/ci.yml/badge.svg)](https://github.com/matsluni/aws-spi-akka-http/actions/workflows/ci.yml)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.matsluni/aws-spi-akka-http_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.matsluni/aws-spi-akka-http_2.12)

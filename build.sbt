@@ -1,4 +1,4 @@
-ThisBuild / organization := "com.github.matsluni"
+ThisBuild / organization := "com.github.pjfanning"
 ThisBuild / crossScalaVersions := List("2.11.12", "2.12.15", "2.13.8")
 ThisBuild / scalaVersion := crossScalaVersions.value.last
 
@@ -11,17 +11,17 @@ lazy val commonSettings = Seq(
     "-encoding", "UTF-8",
     "-unchecked",
     "-deprecation"),
-  description := "An alternative non-blocking async http engine for aws-sdk-java-v2 based on akka-http",
-  name := "aws-spi-akka-http",
+  description := "An alternative non-blocking async http engine for aws-sdk-java-v2 based on pekko-http",
+  name := "aws-spi-pekko-http",
   licenses += ("Apache-2.0", new URL("https://www.apache.org/licenses/LICENSE-2.0.txt")),
-  organizationName := "Matthias Lüneberg",
-  startYear := Some(2018),
-  homepage := Some(url("https://github.com/matsluni/aws-spi-akka-http")),
-  organizationHomepage := Some(url("https://github.com/matsluni/aws-spi-akka-http")),
-  developers := Developer("matsluni", "Matthias Lüneberg", "", url("https://github.com/matsluni")) :: Nil,
+  startYear := Some(2023),
+  homepage := Some(url("https://github.com/pjfanning/aws-spi-pekko-http")),
+  organizationHomepage := Some(url("https://github.com/pjfanning/aws-spi-pekko-http")),
+  developers := Developer("matsluni", "Matthias Lüneberg", "", url("https://github.com/matsluni")) ::
+    Developer("pjfanning", "PJ Fanning", "", url("https://github.com/pjfanning")) :: Nil,
   scmInfo := Some(ScmInfo(
-    browseUrl = url("https://github.com/matsluni/aws-spi-akka-http.git"),
-    connection = "scm:git:git@github.com:matsluni/aws-spi-akka-http.git"
+    browseUrl = url("https://github.com/pjfanning/aws-spi-pekko-http.git"),
+    connection = "scm:git:git@github.com:pjfanning/aws-spi-pekko-http.git"
   ))
 )
 
@@ -55,8 +55,8 @@ lazy val root = (project in file("."))
 
 lazy val deps = {
   val awsSDKVersion = "2.11.4"
-  val akkaVersion = "2.5.31"
-  val AkkaHttpVersion = "10.1.15"
+  val akkaVersion = "2.6.20"
+  val AkkaHttpVersion = "10.2.9"
 
   Seq(
     "com.typesafe.akka"       %% "akka-stream"             % akkaVersion,
