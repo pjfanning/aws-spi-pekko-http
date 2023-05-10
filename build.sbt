@@ -67,13 +67,14 @@ lazy val root = (project in file("."))
 
 lazy val deps = {
   val awsSDKVersion = "2.11.4"
-  val pekkoVersion = "0.0.0+26610-defddc6a-SNAPSHOT"
-  val pekkoHttpVersion = "0.0.0+4311-07201517-SNAPSHOT"
+  val pekkoVersion = "0.0.0+26656-898c6970-SNAPSHOT"
+  val pekkoHttpVersion = "0.0.0+4345-fa1cb9cb-SNAPSHOT"
 
   Seq(
     "org.apache.pekko"        %% "pekko-stream"            % pekkoVersion,
     "org.apache.pekko"        %% "pekko-http"              % pekkoHttpVersion,
     "software.amazon.awssdk"  %  "http-client-spi"         % awsSDKVersion,
+    "org.scala-lang.modules"  %% "scala-java8-compat"      % "1.0.2",
     "org.scala-lang.modules"  %% "scala-collection-compat" % "2.7.0",
 
     "software.amazon.awssdk"  %  "s3"                      % awsSDKVersion   % "test" exclude("software.amazon.awssdk", "netty-nio-client"),
@@ -86,7 +87,6 @@ lazy val deps = {
 
     "junit"                   %  "junit"                   % "4.13.2"        % "test",
 
-    "org.scala-lang.modules"  %% "scala-java8-compat"      % "1.0.2"         % "it,test",
     "org.scalatest"           %% "scalatest"               % "3.2.15"        % "it,test",
     "org.scalatestplus"       %% "junit-4-13"              % "3.2.15.0"      % "it,test",
     "ch.qos.logback"          %  "logback-classic"         % "1.2.11"        % "it,test"
