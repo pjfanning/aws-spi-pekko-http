@@ -52,11 +52,11 @@ public class S3Test extends JUnitSuite {
 
   @Test
   public void testS3() throws Exception {
-    SdkAsyncHttpClient akkaClient = null;
+    SdkAsyncHttpClient pekkoClient = null;
     S3AsyncClient client = null;
 
     try {
-      akkaClient = new PekkoHttpAsyncHttpService().createAsyncHttpClientFactory().build();
+      pekkoClient = new PekkoHttpAsyncHttpService().createAsyncHttpClientFactory().build();
 
       client = S3AsyncClient
               .builder()
@@ -64,12 +64,12 @@ public class S3Test extends JUnitSuite {
               .credentialsProvider(AnonymousCredentialsProvider.create())
               .endpointOverride(new URI("http://localhost:" + s3mock.getMappedPort(9090)))
               .region(Region.of("s3"))
-              .httpClient(akkaClient)
+              .httpClient(pekkoClient)
               .build();
 
       createBucketAndAssert(client);
     } finally {
-      akkaClient.close();
+      pekkoClient.close();
       client.close();
     }
   }
@@ -77,11 +77,11 @@ public class S3Test extends JUnitSuite {
   @Test
   public void testS3WithExistingActorSystem() throws Exception {
     ActorSystem system = ActorSystem.create();
-    SdkAsyncHttpClient akkaClient = null;
+    SdkAsyncHttpClient pekkoClient = null;
     S3AsyncClient client = null;
 
     try {
-      akkaClient = new PekkoHttpAsyncHttpService().createAsyncHttpClientFactory().withActorSystem(system).build();
+      pekkoClient = new PekkoHttpAsyncHttpService().createAsyncHttpClientFactory().withActorSystem(system).build();
 
       client = S3AsyncClient
               .builder()
@@ -89,12 +89,12 @@ public class S3Test extends JUnitSuite {
               .credentialsProvider(AnonymousCredentialsProvider.create())
               .endpointOverride(new URI("http://localhost:" + s3mock.getMappedPort(9090)))
               .region(Region.of("s3"))
-              .httpClient(akkaClient)
+              .httpClient(pekkoClient)
               .build();
 
       createBucketAndAssert(client);
     } finally {
-      akkaClient.close();
+      pekkoClient.close();
       client.close();
       system.terminate();
       system.getWhenTerminated().toCompletableFuture().get(2, TimeUnit.SECONDS);

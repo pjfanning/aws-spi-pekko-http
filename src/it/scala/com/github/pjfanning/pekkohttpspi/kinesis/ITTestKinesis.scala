@@ -29,20 +29,20 @@ class ITTestKinesis extends AnyWordSpec with Matchers with TestBase {
 
   def withClient(testCode: KinesisAsyncClient => Any): Any = {
 
-    val akkaClient = new PekkoHttpAsyncHttpService().createAsyncHttpClientFactory().build()
+    val pekkoClient = new PekkoHttpAsyncHttpService().createAsyncHttpClientFactory().build()
 
     val client = KinesisAsyncClient
       .builder()
       .credentialsProvider(credentialProviderChain)
       .region(defaultRegion)
-      .httpClient(akkaClient)
+      .httpClient(pekkoClient)
       .build()
 
     try {
       testCode(client)
     }
     finally { // clean up
-      akkaClient.close()
+      pekkoClient.close()
       client.close()
     }
   }

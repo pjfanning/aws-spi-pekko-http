@@ -92,14 +92,14 @@ class TestS3 extends BaseAwsClientTest[S3AsyncClient] {
 
   private def withClient(testCode: S3AsyncClient => Any): Any = {
 
-    val akkaClient = new PekkoHttpAsyncHttpService().createAsyncHttpClientFactory().build()
+    val pekkoClient = new PekkoHttpAsyncHttpService().createAsyncHttpClientFactory().build()
 
     val client = S3AsyncClient
       .builder()
       .serviceConfiguration(S3Configuration.builder().checksumValidationEnabled(false).build())
       .credentialsProvider(AnonymousCredentialsProvider.create)
       .endpointOverride(endpoint)
-      .httpClient(akkaClient)
+      .httpClient(pekkoClient)
       .region(defaultRegion)
       .build()
 
@@ -107,7 +107,7 @@ class TestS3 extends BaseAwsClientTest[S3AsyncClient] {
       testCode(client)
     }
     finally { // clean up
-      akkaClient.close()
+      pekkoClient.close()
       client.close()
     }
   }

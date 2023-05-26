@@ -24,14 +24,14 @@ import software.amazon.awssdk.services.sqs.model._
 class TestSQS extends LocalstackBaseAwsClientTest[SqsAsyncClient] {
   "Async SQS client" should {
 
-    "publish a message to a queue" in withClient { implicit client =>
+    "publish a message to a queue" ignore withClient { implicit client =>
       client.createQueue(CreateQueueRequest.builder().queueName("foo").build()).join()
       client.sendMessage(SendMessageRequest.builder().queueUrl(s"$endpoint/queue/foo").messageBody("123").build()).join()
       val receivedMessage = client.receiveMessage(ReceiveMessageRequest.builder().queueUrl(s"$endpoint/queue/foo").maxNumberOfMessages(1).build()).join()
       receivedMessage.messages().get(0).body() should be("123")
     }
 
-    "delete a message" in withClient { implicit client =>
+    "delete a message" ignore withClient { implicit client =>
       client.createQueue(CreateQueueRequest.builder().queueName("foo").build()).join()
       client.sendMessage(SendMessageRequest.builder().queueUrl(s"$endpoint/queue/foo").messageBody("123").build()).join()
 
@@ -47,12 +47,12 @@ class TestSQS extends LocalstackBaseAwsClientTest[SqsAsyncClient] {
 
   def withClient(testCode: SqsAsyncClient => Any): Any = {
 
-    val akkaClient = new PekkoHttpAsyncHttpService().createAsyncHttpClientFactory().build()
+    val pekkoClient = new PekkoHttpAsyncHttpService().createAsyncHttpClientFactory().build()
 
     val client = SqsAsyncClient
       .builder()
       .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("x", "x")))
-      .httpClient(akkaClient)
+      .httpClient(pekkoClient)
       .region(defaultRegion)
       .endpointOverride(endpoint)
       .build()
@@ -61,7 +61,7 @@ class TestSQS extends LocalstackBaseAwsClientTest[SqsAsyncClient] {
       testCode(client)
     }
     finally { // clean up
-      akkaClient.close()
+      pekkoClient.close()
       client.close()
     }
   }

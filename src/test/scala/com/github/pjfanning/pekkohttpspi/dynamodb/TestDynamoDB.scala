@@ -51,13 +51,13 @@ class TestDynamoDB extends LocalstackBaseAwsClientTest[DynamoDbAsyncClient] {
 
   def withClient(testCode: DynamoDbAsyncClient => Any): Any = {
 
-    val akkaClient = new PekkoHttpAsyncHttpService().createAsyncHttpClientFactory().build()
+    val pekkoClient = new PekkoHttpAsyncHttpService().createAsyncHttpClientFactory().build()
 
     val client = DynamoDbAsyncClient
       .builder()
       .endpointOverride(endpoint)
       .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("x", "x")))
-      .httpClient(akkaClient)
+      .httpClient(pekkoClient)
       .region(defaultRegion)
       .build()
 
@@ -65,7 +65,7 @@ class TestDynamoDB extends LocalstackBaseAwsClientTest[DynamoDbAsyncClient] {
       testCode(client)
     }
     finally { // clean up
-      akkaClient.close()
+      pekkoClient.close()
       client.close()
     }
   }

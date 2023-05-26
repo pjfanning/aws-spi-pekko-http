@@ -28,12 +28,12 @@ class ITTestSQS extends AnyWordSpec with Matchers with TestBase {
 
   def withClient(testCode: SqsAsyncClient => Any): Any = {
 
-    val akkaClient = new PekkoHttpAsyncHttpService().createAsyncHttpClientFactory().build()
+    val pekkoClient = new PekkoHttpAsyncHttpService().createAsyncHttpClientFactory().build()
 
     val client = SqsAsyncClient
       .builder()
       .credentialsProvider(credentialProviderChain)
-      .httpClient(akkaClient)
+      .httpClient(pekkoClient)
       .region(defaultRegion)
       .build()
 
@@ -41,7 +41,7 @@ class ITTestSQS extends AnyWordSpec with Matchers with TestBase {
       testCode(client)
     }
     finally { // clean up
-      akkaClient.close()
+      pekkoClient.close()
       client.close()
     }
   }

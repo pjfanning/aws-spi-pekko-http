@@ -34,12 +34,12 @@ class TestSNS extends LocalstackBaseAwsClientTest[SnsAsyncClient] {
 
   def withClient(testCode: SnsAsyncClient => Any): Any = {
 
-    val akkaClient = new PekkoHttpAsyncHttpService().createAsyncHttpClientFactory().build()
+    val pekkoClient = new PekkoHttpAsyncHttpService().createAsyncHttpClientFactory().build()
 
     val client = SnsAsyncClient
       .builder()
       .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("x", "x")))
-      .httpClient(akkaClient)
+      .httpClient(pekkoClient)
       .region(defaultRegion)
       .endpointOverride(endpoint)
       .build()
@@ -48,7 +48,7 @@ class TestSNS extends LocalstackBaseAwsClientTest[SnsAsyncClient] {
       testCode(client)
     }
     finally { // clean up
-      akkaClient.close()
+      pekkoClient.close()
       client.close()
     }
   }
