@@ -1,7 +1,7 @@
 import org.typelevel.sbt.gha.JavaSpec.Distribution.Zulu
 
 ThisBuild / organization := "com.github.pjfanning"
-ThisBuild / crossScalaVersions := List("2.12.17", "2.13.10")
+ThisBuild / crossScalaVersions := List("2.12.17", "2.13.10", "3.3.0")
 ThisBuild / scalaVersion := "2.13.10"
 
 ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec(Zulu, "8"))
@@ -67,8 +67,8 @@ lazy val root = (project in file("."))
 
 lazy val deps = {
   val awsSDKVersion = "2.11.4"
-  val pekkoVersion = "0.0.0+26656-898c6970-SNAPSHOT"
-  val pekkoHttpVersion = "0.0.0+4345-fa1cb9cb-SNAPSHOT"
+  val pekkoVersion = "0.0.0+26669-ec5b6764-SNAPSHOT"
+  val pekkoHttpVersion = "0.0.0+4411-6fe04045-SNAPSHOT"
 
   Seq(
     "org.apache.pekko"        %% "pekko-stream"            % pekkoVersion,

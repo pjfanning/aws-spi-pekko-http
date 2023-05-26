@@ -41,7 +41,7 @@ trait BaseAwsClientTest[C <: SdkClient]
   lazy val defaultRegion: Region = Region.EU_WEST_1
 
   def exposedServicePort: Int
-  val container: GenericContainer
+  def container: GenericContainer
 
   def endpoint = new URI(s"http://localhost:${container.mappedPort(exposedServicePort)}")
   def randomIdentifier(length: Int): String = Random.alphanumeric.take(length).mkString
