@@ -1,8 +1,8 @@
 # AWS Pekko-Http SPI implementation 
 
-[![Continuous Integration](https://github.com/matsluni/aws-spi-akka-http/actions/workflows/ci.yml/badge.svg)](https://github.com/matsluni/aws-spi-akka-http/actions/workflows/ci.yml)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.matsluni/aws-spi-akka-http_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.matsluni/aws-spi-akka-http_2.12)
-[![License](http://img.shields.io/:license-Apache%202-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.txt) [![Join the chat at https://gitter.im/aws-spi-akka-http/community](https://badges.gitter.im/aws-spi-akka-http/community.svg)](https://gitter.im/aws-spi-akka-http/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Continuous Integration](https://pjfanning/aws-spi-pekko-http/actions/workflows/ci.yml/badge.svg)](https://github.com/pjfanning/aws-spi-pekko-http/actions/workflows/ci.yml)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.pjfanning/aws-spi-pekko-http_2.13/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.pjfanning/aws-spi-pekko-http_2.13)
+[![License](http://img.shields.io/:license-Apache%202-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 This library implements the provided [SPI](https://en.wikipedia.org/wiki/Service_provider_interface) for the asynchronous 
 and non-blocking http calls in the new [AWS Java SDK](https://github.com/aws/aws-sdk-java-v2) with 
@@ -16,28 +16,28 @@ This is a fork of [matsluni/aws-spi-akka-http](https://github.com/matsluni/aws-s
 
 Create a dependency to this library by adding the following to your `build.sbt`:
 
-    "com.github.matsluni" %% "aws-spi-akka-http" % "0.0.11"
+    "com.github.pjfanning" %% "aws-spi-pekko-http" % "???"
     
 or for Maven, the following to `pom.xml`:
 
 ```
 <dependency>
-    <groupId>com.github.matsluni</groupId>
-    <artifactId>aws-spi-akka-http_2.12</artifactId>
-    <version>0.0.11</version>
+    <groupId>com.github.pjfanning</groupId>
+    <artifactId>aws-spi-pekko-http_2.12</artifactId>
+    <version>???</version>
 </dependency>
 ```
 
-An example (in scala) from the test shows how to use akka-http as the underlying http provider instead of netty.
+An example (in scala) from the test shows how to use pekko-http as the underlying http provider instead of netty.
 
 ```scala
-val akkaClient = new AkkaHttpAsyncHttpService().createAsyncHttpClientFactory().build()
+val pekkoClient = new PekkoHttpAsyncHttpService().createAsyncHttpClientFactory().build()
 
 val client = S3AsyncClient
               .builder()
               .credentialsProvider(ProfileCredentialsProvider.builder().build())
               .region(Region.EU_CENTRAL_1)
-              .httpClient(akkaClient)
+              .httpClient(pekkoClient)
               .build()
 
 val eventualResponse = client.listBuckets()
@@ -46,7 +46,7 @@ val eventualResponse = client.listBuckets()
 If you connect to an AWS service from inside a corporate network, it may be necessary to configure a proxy. This can be achieved in the following way:
 
 ```scala
-val system = ActorSystem("aws-akka-http")
+val system = ActorSystem("aws-pekko-http")
 
 val proxyHost = "localhost"
 val proxyPort = 8888
@@ -57,8 +57,8 @@ val settings = ConnectionPoolSettings(system)
   .withConnectionSettings(ClientConnectionSettings(system)
   .withTransport(httpsProxyTransport))
 
-lazy val akkaHttpClient = 
-  AkkaHttpClient
+lazy val pekkoHttpClient = 
+  PekkoHttpClient
     .builder()
     .withActorSystem(system)
     .withConnectionPoolSettings(settings)
@@ -68,7 +68,7 @@ val client = S3AsyncClient
 	.builder()
 	.credentialsProvider(ProfileCredentialsProvider.builder().build())
 	.region(Region.EU_CENTRAL_1)
-	.httpClient(akkaHttpClient)
+	.httpClient(pekkoHttpClient)
 	.build()
               
 val eventualResponse = client.listBuckets()
@@ -97,7 +97,7 @@ software.amazon.awssdk.core.exception.SdkClientException: Multiple HTTP implemen
 To further reduce the classpath it is also optional possible to exclude `"software.amazon.awssdk", "apache-client"`. 
 This excludes an additional HttpClient, which comes as a transitive dependency with a AWS service.
 
-There also exists an [mini example project](https://github.com/matsluni/aws-spi-akka-http-example) which shows the usage.
+There also exists an [mini example project](https://github.com/pjfanning/aws-spi-pekko-http-example) which shows the usage.
 This example uses gradle and also shows how to exclude the netty dependency.
 
 ## Running the tests in this repo
