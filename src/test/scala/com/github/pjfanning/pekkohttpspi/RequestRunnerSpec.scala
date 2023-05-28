@@ -34,11 +34,11 @@ import scala.concurrent.Future
 class RequestRunnerSpec extends AnyWordSpec with Matchers with OptionValues {
   "Check headers are present from response" in {
     implicit val system = ActorSystem("test")
-    implicit val ec = system.dispatcher
-    val response = HttpResponse(entity = HttpEntity("Ok"), headers = `User-Agent`("Mozilla") :: Nil)
-    val runner = new RequestRunner()
-    val handler = new MyHeaderHandler()
-    val resp = runner.run(() => Future.successful(response), handler)
+    implicit val ec     = system.dispatcher
+    val response        = HttpResponse(entity = HttpEntity("Ok"), headers = `User-Agent`("Mozilla") :: Nil)
+    val runner          = new RequestRunner()
+    val handler         = new MyHeaderHandler()
+    val resp            = runner.run(() => Future.successful(response), handler)
     resp.join()
 
     handler.responseHeaders.headers().get("User-Agent").get(0) shouldBe "Mozilla"
@@ -47,14 +47,14 @@ class RequestRunnerSpec extends AnyWordSpec with Matchers with OptionValues {
   }
 
   class MyHeaderHandler() extends SdkAsyncHttpResponseHandler {
-    private val headers = new AtomicReference[SdkHttpResponse](null)
-    def responseHeaders = headers.get()
+    private val headers                                    = new AtomicReference[SdkHttpResponse](null)
+    def responseHeaders                                    = headers.get()
     override def onHeaders(headers: SdkHttpResponse): Unit = this.headers.set(headers)
     override def onStream(stream: Publisher[ByteBuffer]): Unit = stream.subscribe(new Subscriber[ByteBuffer] {
       override def onSubscribe(s: Subscription): Unit = s.request(1000)
-      override def onNext(t: ByteBuffer): Unit = ()
-      override def onError(t: Throwable): Unit = ()
-      override def onComplete(): Unit = ()
+      override def onNext(t: ByteBuffer): Unit        = ()
+      override def onError(t: Throwable): Unit        = ()
+      override def onComplete(): Unit                 = ()
     })
     override def onError(error: Throwable): Unit = ()
   }

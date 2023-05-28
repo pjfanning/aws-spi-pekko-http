@@ -25,7 +25,7 @@ class TestSNS extends LocalstackBaseAwsClientTest[SnsAsyncClient] {
 
   "Async SNS client" should {
     "publish a message to a topic" in withClient { implicit client =>
-      val arn = client.createTopic(CreateTopicRequest.builder().name("topic-example").build()).join().topicArn()
+      val arn    = client.createTopic(CreateTopicRequest.builder().name("topic-example").build()).join().topicArn()
       val result = client.publish(PublishRequest.builder().message("a message").topicArn(arn).build()).join()
 
       result.messageId() should not be null
@@ -44,9 +44,8 @@ class TestSNS extends LocalstackBaseAwsClientTest[SnsAsyncClient] {
       .endpointOverride(endpoint)
       .build()
 
-    try {
+    try
       testCode(client)
-    }
     finally { // clean up
       pekkoClient.close()
       client.close()

@@ -34,14 +34,11 @@ class RequestRunner()(implicit sys: ActorSystem, ec: ExecutionContext, mat: Mate
 
   val logger = LoggerFactory.getLogger(this.getClass)
 
-  def run(runRequest: () => Future[HttpResponse],
-          handler: SdkAsyncHttpResponseHandler): CompletableFuture[Void] = {
+  def run(runRequest: () => Future[HttpResponse], handler: SdkAsyncHttpResponseHandler): CompletableFuture[Void] = {
     val result = runRequest().flatMap { response =>
       handler.onHeaders(toSdkHttpFullResponse(response))
 
-      val (complete, publisher) = response
-        .entity
-        .dataBytes
+      val (complete, publisher) = response.entity.dataBytes
         .map(_.asByteBuffer)
         .alsoToMat(Sink.ignore)(Keep.right)
         .toMat(Sink.asPublisher(fanout = false))(Keep.both)
@@ -55,15 +52,17 @@ class RequestRunner()(implicit sys: ActorSystem, ec: ExecutionContext, mat: Mate
     FutureConverters.asJava(result.map(_ => null: Void)).toCompletableFuture
   }
 
-  private[pekkohttpspi] def toSdkHttpFullResponse(response: HttpResponse): SdkHttpFullResponse = {
-    SdkHttpFullResponse.builder()
+  private[pekkohttpspi] def toSdkHttpFullResponse(response: HttpResponse): SdkHttpFullResponse =
+    SdkHttpFullResponse
+      .builder()
       .headers(convertToSdkResponseHeaders(response))
       .statusCode(response.status.intValue())
       .statusText(response.status.reason)
       .build
-  }
 
-  private[pekkohttpspi] def convertToSdkResponseHeaders(response: HttpResponse): java.util.Map[String, java.util.List[String]] = {
+  private[pekkohttpspi] def convertToSdkResponseHeaders(
+      response: HttpResponse
+  ): java.util.Map[String, java.util.List[String]] = {
     val responseHeaders = new java.util.HashMap[String, java.util.List[String]]
 
     response.entity.contentType match {

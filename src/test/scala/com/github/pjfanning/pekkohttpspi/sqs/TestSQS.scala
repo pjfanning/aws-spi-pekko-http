@@ -26,20 +26,45 @@ class TestSQS extends LocalstackBaseAwsClientTest[SqsAsyncClient] {
 
     "publish a message to a queue" ignore withClient { implicit client =>
       client.createQueue(CreateQueueRequest.builder().queueName("foo").build()).join()
-      client.sendMessage(SendMessageRequest.builder().queueUrl(s"$endpoint/queue/foo").messageBody("123").build()).join()
-      val receivedMessage = client.receiveMessage(ReceiveMessageRequest.builder().queueUrl(s"$endpoint/queue/foo").maxNumberOfMessages(1).build()).join()
+      client
+        .sendMessage(SendMessageRequest.builder().queueUrl(s"$endpoint/queue/foo").messageBody("123").build())
+        .join()
+      val receivedMessage = client
+        .receiveMessage(ReceiveMessageRequest.builder().queueUrl(s"$endpoint/queue/foo").maxNumberOfMessages(1).build())
+        .join()
       receivedMessage.messages().get(0).body() should be("123")
     }
 
     "delete a message" ignore withClient { implicit client =>
       client.createQueue(CreateQueueRequest.builder().queueName("foo").build()).join()
-      client.sendMessage(SendMessageRequest.builder().queueUrl(s"$endpoint/queue/foo").messageBody("123").build()).join()
+      client
+        .sendMessage(SendMessageRequest.builder().queueUrl(s"$endpoint/queue/foo").messageBody("123").build())
+        .join()
 
-      val receivedMessages = client.receiveMessage(ReceiveMessageRequest.builder().queueUrl(s"$endpoint/queue/foo").maxNumberOfMessages(1).build()).join
+      val receivedMessages = client
+        .receiveMessage(ReceiveMessageRequest.builder().queueUrl(s"$endpoint/queue/foo").maxNumberOfMessages(1).build())
+        .join
 
-      client.deleteMessage(DeleteMessageRequest.builder().queueUrl(s"$endpoint/queue/foo").receiptHandle(receivedMessages.messages().get(0).receiptHandle()).build()).join()
+      client
+        .deleteMessage(
+          DeleteMessageRequest
+            .builder()
+            .queueUrl(s"$endpoint/queue/foo")
+            .receiptHandle(receivedMessages.messages().get(0).receiptHandle())
+            .build()
+        )
+        .join()
 
-      val receivedMessage = client.receiveMessage(ReceiveMessageRequest.builder().queueUrl(s"$endpoint/queue/foo").maxNumberOfMessages(1).waitTimeSeconds(1).build()).join()
+      val receivedMessage = client
+        .receiveMessage(
+          ReceiveMessageRequest
+            .builder()
+            .queueUrl(s"$endpoint/queue/foo")
+            .maxNumberOfMessages(1)
+            .waitTimeSeconds(1)
+            .build()
+        )
+        .join()
       receivedMessage.messages() shouldBe java.util.Collections.EMPTY_LIST
     }
 
@@ -57,9 +82,8 @@ class TestSQS extends LocalstackBaseAwsClientTest[SqsAsyncClient] {
       .endpointOverride(endpoint)
       .build()
 
-    try {
+    try
       testCode(client)
-    }
     finally { // clean up
       pekkoClient.close()
       client.close()

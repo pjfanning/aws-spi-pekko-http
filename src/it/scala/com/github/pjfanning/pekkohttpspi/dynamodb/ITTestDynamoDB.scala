@@ -26,7 +26,13 @@ import org.scalatest.concurrent.ScalaFutures._
 
 import scala.compat.java8.FutureConverters._
 
-class ITTestDynamoDB extends AnyWordSpec with Matchers with Futures with Eventually with IntegrationPatience with TestBase {
+class ITTestDynamoDB
+    extends AnyWordSpec
+    with Matchers
+    with Futures
+    with Eventually
+    with IntegrationPatience
+    with TestBase {
 
   def withClient(testCode: DynamoDbAsyncClient => Any): Any = {
 
@@ -39,9 +45,8 @@ class ITTestDynamoDB extends AnyWordSpec with Matchers with Futures with Eventua
       .httpClient(pekkoClient)
       .build()
 
-    try {
+    try
       testCode(client)
-    }
     finally { // clean up
       pekkoClient.close()
       client.close()
@@ -50,28 +55,33 @@ class ITTestDynamoDB extends AnyWordSpec with Matchers with Futures with Eventua
 
   "DynamoDB" should {
     "create a table" in withClient { implicit client =>
-      val tableName = s"Movies-${randomIdentifier(5)}"
+      val tableName  = s"Movies-${randomIdentifier(5)}"
       val attributes = AttributeDefinition.builder.attributeName("film_id").attributeType(ScalarAttributeType.S).build()
-      val keySchema = KeySchemaElement.builder.attributeName("film_id").keyType(KeyType.HASH).build()
+      val keySchema  = KeySchemaElement.builder.attributeName("film_id").keyType(KeyType.HASH).build()
 
-      val result = client.createTable(
-        CreateTableRequest.builder()
-          .tableName(tableName)
-          .attributeDefinitions(attributes)
-          .keySchema(keySchema)
-          .provisionedThroughput(ProvisionedThroughput
-                                  .builder
-                                  .readCapacityUnits(1L)
-                                  .writeCapacityUnits(1L)
-                                  .build())
-          .build()).join
+      val result = client
+        .createTable(
+          CreateTableRequest
+            .builder()
+            .tableName(tableName)
+            .attributeDefinitions(attributes)
+            .keySchema(keySchema)
+            .provisionedThroughput(
+              ProvisionedThroughput.builder
+                .readCapacityUnits(1L)
+                .writeCapacityUnits(1L)
+                .build()
+            )
+            .build()
+        )
+        .join
 
       val desc = result.tableDescription()
-      desc.tableName() should be (tableName)
+      desc.tableName() should be(tableName)
 
       eventually {
         val response = client.describeTable(DescribeTableRequest.builder().tableName(tableName).build()).toScala
-        response.futureValue.table().tableStatus() should be (TableStatus.ACTIVE)
+        response.futureValue.table().tableStatus() should be(TableStatus.ACTIVE)
       }
       client.deleteTable(DeleteTableRequest.builder().tableName(tableName).build()).toScala
 
