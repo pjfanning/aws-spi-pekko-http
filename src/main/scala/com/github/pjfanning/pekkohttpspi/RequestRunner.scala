@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory
 import software.amazon.awssdk.http.SdkHttpFullResponse
 import software.amazon.awssdk.http.async.SdkAsyncHttpResponseHandler
 
-import scala.compat.java8.FutureConverters
 import scala.concurrent.{ExecutionContext, Future}
 import scala.jdk.CollectionConverters._
 
@@ -53,7 +52,7 @@ class RequestRunner()(implicit sys: ActorSystem, ec: ExecutionContext, mat: Mate
     }
 
     result.failed.foreach(handler.onError)
-    FutureConverters.toJava(result.map(_ => null: Void)).toCompletableFuture
+    FutureConverters.asJava(result.map(_ => null: Void)).toCompletableFuture
   }
 
   private[pekkohttpspi] def toSdkHttpFullResponse(response: HttpResponse): SdkHttpFullResponse = {

@@ -37,7 +37,6 @@ import software.amazon.awssdk.utils.AttributeMap
 
 import scala.collection.immutable
 import scala.jdk.CollectionConverters._
-import scala.compat.java8.OptionConverters._
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext}
 
@@ -81,7 +80,7 @@ object PekkoHttpClient {
                                                          contentType: ContentType,
                                                          contentPublisher: SdkHttpContentPublisher): RequestEntity =
     method.requestEntityAcceptance match {
-      case Expected => contentPublisher.contentLength().asScala match {
+      case Expected => OptionConverters.toScala(contentPublisher.contentLength()) match {
         case Some(length) => HttpEntity(contentType, length, Source.fromPublisher(contentPublisher).map(ByteString(_)))
         case None         => HttpEntity(contentType, Source.fromPublisher(contentPublisher).map(ByteString(_)))
       }

@@ -74,7 +74,6 @@ lazy val deps = {
     "org.apache.pekko"        %% "pekko-stream"            % pekkoVersion,
     "org.apache.pekko"        %% "pekko-http"              % pekkoHttpVersion,
     "software.amazon.awssdk"  %  "http-client-spi"         % awsSDKVersion,
-    "org.scala-lang.modules"  %% "scala-java8-compat"      % "1.0.2",
     "org.scala-lang.modules"  %% "scala-collection-compat" % "2.7.0",
 
     "software.amazon.awssdk"  %  "s3"                      % awsSDKVersion   % "test" exclude("software.amazon.awssdk", "netty-nio-client"),
