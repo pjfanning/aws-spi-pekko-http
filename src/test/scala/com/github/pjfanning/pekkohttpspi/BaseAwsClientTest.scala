@@ -30,7 +30,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
 trait BaseAwsClientTest[C <: SdkClient]
-  extends AnyWordSpec
+    extends AnyWordSpec
     with Matchers
     with Futures
     with Eventually
@@ -43,7 +43,7 @@ trait BaseAwsClientTest[C <: SdkClient]
   def exposedServicePort: Int
   def container: GenericContainer
 
-  def endpoint = new URI(s"http://localhost:${container.mappedPort(exposedServicePort)}")
+  def endpoint                              = new URI(s"http://localhost:${container.mappedPort(exposedServicePort)}")
   def randomIdentifier(length: Int): String = Random.alphanumeric.take(length).mkString
 }
 

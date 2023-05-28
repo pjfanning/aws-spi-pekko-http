@@ -16,7 +16,12 @@
 
 package com.github.pjfanning.pekkohttpspi
 
-import software.amazon.awssdk.auth.credentials.{AwsCredentialsProviderChain, EnvironmentVariableCredentialsProvider, ProfileCredentialsProvider, SystemPropertyCredentialsProvider}
+import software.amazon.awssdk.auth.credentials.{
+  AwsCredentialsProviderChain,
+  EnvironmentVariableCredentialsProvider,
+  ProfileCredentialsProvider,
+  SystemPropertyCredentialsProvider
+}
 import software.amazon.awssdk.regions.Region
 
 import scala.util.Random
@@ -30,15 +35,13 @@ trait TestBase {
   def randomIdentifier(length: Int): String = Random.alphanumeric.take(length).mkString
 
   lazy val credentialProviderChain =
-    AwsCredentialsProviderChain
-      .builder
+    AwsCredentialsProviderChain.builder
       .credentialsProviders(
         EnvironmentVariableCredentialsProvider.create,
         SystemPropertyCredentialsProvider.create,
-        ProfileCredentialsProvider
-          .builder
+        ProfileCredentialsProvider.builder
           .profileName(credentialProfileName)
           .build
-        )
+      )
       .build
 }

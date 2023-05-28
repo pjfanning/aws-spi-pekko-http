@@ -25,24 +25,30 @@ class TestDynamoDB extends LocalstackBaseAwsClientTest[DynamoDbAsyncClient] {
   "DynamoDB" should {
     "create a table" in withClient { implicit client =>
       val attributes = AttributeDefinition.builder.attributeName("film_id").attributeType(ScalarAttributeType.S).build()
-      val keySchema = KeySchemaElement.builder.attributeName("film_id").keyType(KeyType.HASH).build()
+      val keySchema  = KeySchemaElement.builder.attributeName("film_id").keyType(KeyType.HASH).build()
 
       val emptyTableResult = client.listTables().join()
-      emptyTableResult.tableNames() should have size (0)
+      emptyTableResult.tableNames() should have size 0
 
-      val result = client.createTable(
-        CreateTableRequest.builder()
-          .tableName("Movies")
-          .attributeDefinitions(attributes)
-          .keySchema(keySchema)
-          .provisionedThroughput(ProvisionedThroughput.builder.readCapacityUnits(1000L).writeCapacityUnits(1000L).build())
-          .build()).join
+      val result = client
+        .createTable(
+          CreateTableRequest
+            .builder()
+            .tableName("Movies")
+            .attributeDefinitions(attributes)
+            .keySchema(keySchema)
+            .provisionedThroughput(
+              ProvisionedThroughput.builder.readCapacityUnits(1000L).writeCapacityUnits(1000L).build()
+            )
+            .build()
+        )
+        .join
 
       val desc = result.tableDescription()
       desc.tableName() should be("Movies")
 
       val tableResult = client.listTables().join()
-      tableResult.tableNames() should have size (1)
+      tableResult.tableNames() should have size 1
     }
 
   }
@@ -59,9 +65,8 @@ class TestDynamoDB extends LocalstackBaseAwsClientTest[DynamoDbAsyncClient] {
       .region(defaultRegion)
       .build()
 
-    try {
+    try
       testCode(client)
-    }
     finally { // clean up
       pekkoClient.close()
       client.close()

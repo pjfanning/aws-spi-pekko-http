@@ -38,9 +38,8 @@ class ITTestKinesis extends AnyWordSpec with Matchers with TestBase {
       .httpClient(pekkoClient)
       .build()
 
-    try {
+    try
       testCode(client)
-    }
     finally { // clean up
       pekkoClient.close()
       client.close()
@@ -50,17 +49,16 @@ class ITTestKinesis extends AnyWordSpec with Matchers with TestBase {
   "Kinesis async client" should {
 
     "use a data stream: create + put + get + delete" in withClient { implicit client =>
-
       val streamName = "aws-spi-test-" + Random.alphanumeric.take(10).filterNot(_.isUpper).mkString
-      val data = "123"
+      val data       = "123"
 
       val createRequest = CreateStreamRequest
         .builder()
-          .streamName(streamName)
-          .shardCount(1)
-          .build()
+        .streamName(streamName)
+        .shardCount(1)
+        .build()
 
-      val _ = client.createStream(createRequest).join()
+      val _                     = client.createStream(createRequest).join()
       val describeStreamRequest = DescribeStreamRequest.builder().streamName(streamName).build()
 
       Thread.sleep(5000)
@@ -96,18 +94,16 @@ class ITTestKinesis extends AnyWordSpec with Matchers with TestBase {
     }
   }
 
-  private def waitToBeCreated(client: KinesisAsyncClient, req: DescribeStreamRequest, tries: Int): String = {
+  private def waitToBeCreated(client: KinesisAsyncClient, req: DescribeStreamRequest, tries: Int): String =
     if (tries == 0) "error"
     else {
       val r = client.describeStream(req).join()
       if (r.streamDescription().streamStatus() == StreamStatus.ACTIVE) {
         println(s"Current status: ${r.streamDescription().streamStatus()}")
         r.streamDescription().streamARN()
-      }
-      else {
+      } else {
         Thread.sleep(1000)
         waitToBeCreated(client, req, tries - 1)
       }
     }
-  }
 }
