@@ -16,13 +16,13 @@
 
 package com.github.pjfanning.pekkohttpspi
 
+import java.util.Collections
+
 import org.apache.pekko.http.scaladsl.model.headers.`Content-Type`
 import org.apache.pekko.http.scaladsl.model.MediaTypes
 import org.scalatest.OptionValues
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-
-import scala.jdk.CollectionConverters._
 
 class PekkoHttpClientSpec extends AnyWordSpec with Matchers with OptionValues {
 
@@ -35,11 +35,10 @@ class PekkoHttpClientSpec extends AnyWordSpec with Matchers with OptionValues {
     }
 
     "remove 'ContentType' return 'ContentLength' separate from sdk headers" in {
-      val headers = collection.immutable.Map(
-        "Content-Type" -> List("application/xml").asJava,
-        "Content-Length"-> List("123").asJava,
-        "Accept" -> List("*/*").asJava
-      ).asJava
+      val headers = new java.util.HashMap[String, java.util.List[String]]
+      headers.put("Content-Type", Collections.singletonList("application/xml"))
+      headers.put("Content-Length", Collections.singletonList("123"))
+      headers.put("Accept", Collections.singletonList("*/*"))
 
       val (contentTypeHeader, reqHeaders) = PekkoHttpClient.convertHeaders(headers)
 

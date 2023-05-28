@@ -21,8 +21,6 @@ import software.amazon.awssdk.auth.credentials.{AwsBasicCredentials, StaticCrede
 import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient
 import software.amazon.awssdk.services.dynamodb.model._
 
-import scala.jdk.CollectionConverters._
-
 class TestDynamoDB extends LocalstackBaseAwsClientTest[DynamoDbAsyncClient] {
   "DynamoDB" should {
     "create a table" in withClient { implicit client =>
@@ -30,7 +28,7 @@ class TestDynamoDB extends LocalstackBaseAwsClientTest[DynamoDbAsyncClient] {
       val keySchema = KeySchemaElement.builder.attributeName("film_id").keyType(KeyType.HASH).build()
 
       val emptyTableResult = client.listTables().join()
-      emptyTableResult.tableNames().asScala should have size (0)
+      emptyTableResult.tableNames() should have size (0)
 
       val result = client.createTable(
         CreateTableRequest.builder()
@@ -44,7 +42,7 @@ class TestDynamoDB extends LocalstackBaseAwsClientTest[DynamoDbAsyncClient] {
       desc.tableName() should be("Movies")
 
       val tableResult = client.listTables().join()
-      tableResult.tableNames().asScala should have size (1)
+      tableResult.tableNames() should have size (1)
     }
 
   }
