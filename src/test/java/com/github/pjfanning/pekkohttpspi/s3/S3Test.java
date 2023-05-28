@@ -48,7 +48,8 @@ public class S3Test extends JUnitSuite {
   private static SecureRandom rnd = new SecureRandom();
 
   @Rule
-  public GenericContainer s3mock = new GenericContainer<>("adobe/s3mock:2.1.24").withExposedPorts(9090);
+  public GenericContainer s3mock =
+      new GenericContainer<>("adobe/s3mock:2.1.24").withExposedPorts(9090);
 
   @Test
   public void testS3() throws Exception {
@@ -58,9 +59,10 @@ public class S3Test extends JUnitSuite {
     try {
       pekkoClient = new PekkoHttpAsyncHttpService().createAsyncHttpClientFactory().build();
 
-      client = S3AsyncClient
-              .builder()
-              .serviceConfiguration(S3Configuration.builder().checksumValidationEnabled(false).build())
+      client =
+          S3AsyncClient.builder()
+              .serviceConfiguration(
+                  S3Configuration.builder().checksumValidationEnabled(false).build())
               .credentialsProvider(AnonymousCredentialsProvider.create())
               .endpointOverride(new URI("http://localhost:" + s3mock.getMappedPort(9090)))
               .region(Region.of("s3"))
@@ -81,11 +83,16 @@ public class S3Test extends JUnitSuite {
     S3AsyncClient client = null;
 
     try {
-      pekkoClient = new PekkoHttpAsyncHttpService().createAsyncHttpClientFactory().withActorSystem(system).build();
+      pekkoClient =
+          new PekkoHttpAsyncHttpService()
+              .createAsyncHttpClientFactory()
+              .withActorSystem(system)
+              .build();
 
-      client = S3AsyncClient
-              .builder()
-              .serviceConfiguration(S3Configuration.builder().checksumValidationEnabled(false).build())
+      client =
+          S3AsyncClient.builder()
+              .serviceConfiguration(
+                  S3Configuration.builder().checksumValidationEnabled(false).build())
               .credentialsProvider(AnonymousCredentialsProvider.create())
               .endpointOverride(new URI("http://localhost:" + s3mock.getMappedPort(9090)))
               .region(Region.of("s3"))
@@ -108,19 +115,29 @@ public class S3Test extends JUnitSuite {
     FileWriter fileWriter = new FileWriter(randomFile);
     fileWriter.write(fileContent);
     fileWriter.flush();
-    client.putObject(PutObjectRequest.builder().bucket("foo").key("my-file").contentType("text/plain").build(), randomFile.toPath()).join();
+    client
+        .putObject(
+            PutObjectRequest.builder()
+                .bucket("foo")
+                .key("my-file")
+                .contentType("text/plain")
+                .build(),
+            randomFile.toPath())
+        .join();
 
-    ResponseBytes result = client.getObject(GetObjectRequest.builder().bucket("foo").key("my-file").build(),
-            AsyncResponseTransformer.toBytes()).join();
+    ResponseBytes result =
+        client
+            .getObject(
+                GetObjectRequest.builder().bucket("foo").key("my-file").build(),
+                AsyncResponseTransformer.toBytes())
+            .join();
 
     assertEquals(fileContent, result.asUtf8String());
   }
 
   String randomString(int len) {
-  	 StringBuilder sb = new StringBuilder( len );
-  	 for( int i = 0; i < len; i++ )
-  	 	 sb.append( AB.charAt( rnd.nextInt(AB.length()) ) );
-  	 return sb.toString();
+    StringBuilder sb = new StringBuilder(len);
+    for (int i = 0; i < len; i++) sb.append(AB.charAt(rnd.nextInt(AB.length())));
+    return sb.toString();
   }
-
 }
