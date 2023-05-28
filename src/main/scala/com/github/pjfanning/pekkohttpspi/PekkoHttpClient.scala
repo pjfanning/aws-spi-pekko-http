@@ -45,9 +45,9 @@ class PekkoHttpClient(shutdownHandle: () => Unit, connectionSettings: Connection
   lazy val runner = new RequestRunner()
 
   override def execute(request: AsyncExecuteRequest): CompletableFuture[Void] = {
-    val akkaHttpRequest = toAkkaRequest(request.request(), request.requestContentPublisher())
+    val pekkoHttpRequest = toPekkoRequest(request.request(), request.requestContentPublisher())
     runner.run(
-      () => Http().singleRequest(akkaHttpRequest, settings = connectionSettings),
+      () => Http().singleRequest(pekkoHttpRequest, settings = connectionSettings),
       request.responseHandler()
     )
   }
@@ -56,14 +56,14 @@ class PekkoHttpClient(shutdownHandle: () => Unit, connectionSettings: Connection
     shutdownHandle()
   }
 
-  override def clientName(): String = "akka-http"
+  override def clientName(): String = "pekko-http"
 }
 
 object PekkoHttpClient {
 
   val logger = LoggerFactory.getLogger(this.getClass)
 
-  private[pekkohttpspi] def toAkkaRequest(request: SdkHttpRequest, contentPublisher: SdkHttpContentPublisher): HttpRequest = {
+  private[pekkohttpspi] def toPekkoRequest(request: SdkHttpRequest, contentPublisher: SdkHttpContentPublisher): HttpRequest = {
     val (contentTypeHeader, reqheaders) = convertHeaders(request.headers())
     val method = convertMethod(request.method().name())
     HttpRequest(
@@ -122,7 +122,7 @@ object PekkoHttpClient {
           list.result()
         }.")
       }
-      // skip content-length as it will be calculated by akka-http itself and must not be provided in the request headers
+      // skip content-length as it will be calculated by pekko-http itself and must not be provided in the request headers
       if (`Content-Length`.lowercaseName == headerName.toLowerCase) (ctHeader, hdrs)
       else {
         HttpHeader.parse(headerName, headerValue.get(0)) match {
@@ -150,7 +150,7 @@ object PekkoHttpClient {
                                     private val executionContext: Option[ExecutionContext] = None,
                                     private val connectionPoolSettings: Option[ConnectionPoolSettings] = None) extends SdkAsyncHttpClient.Builder[PekkoHttpClientBuilder] {
     def buildWithDefaults(attributeMap: AttributeMap): SdkAsyncHttpClient = {
-      implicit val as = actorSystem.getOrElse(ActorSystem("aws-akka-http"))
+      implicit val as = actorSystem.getOrElse(ActorSystem("aws-pekko-http"))
       implicit val ec = executionContext.getOrElse(as.dispatcher)
       val mat: Materializer = SystemMaterializer(as).materializer
 
