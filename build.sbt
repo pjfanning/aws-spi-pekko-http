@@ -25,12 +25,19 @@ ThisBuild / githubWorkflowPublish := Seq(
 ThisBuild / mimaPreviousArtifacts := Set.empty
 ThisBuild / resolvers += "Apache Nexus Snapshots".at("https://repository.apache.org/content/repositories/snapshots/")
 
+val isScala3 = Def.setting(scalaBinaryVersion.value == "3")
+
 lazy val commonSettings = Seq(
   scalacOptions ++= Seq(
     "-target:jvm-1.8",
     "-encoding", "UTF-8",
     "-unchecked",
-    "-deprecation"),
+    "-deprecation") ++ (
+      if (!isScala3.value)
+        Seq("-opt:l:inline", "-opt-inline-from:<sources>")
+      else
+        Seq.empty // Inliner not available for Scala 3 yet
+    ),
   description := "An alternative non-blocking async http engine for aws-sdk-java-v2 based on pekko-http",
   name := "aws-spi-pekko-http",
   licenses += ("Apache-2.0", new URL("https://www.apache.org/licenses/LICENSE-2.0.txt")),
