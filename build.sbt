@@ -1,10 +1,10 @@
-import org.typelevel.sbt.gha.JavaSpec.Distribution.Zulu
+import org.typelevel.sbt.gha.JavaSpec.Distribution.Temurin
 
 ThisBuild / organization       := "com.github.pjfanning"
 ThisBuild / crossScalaVersions := List("2.12.17", "2.13.10", "3.3.0")
 ThisBuild / scalaVersion       := "2.13.10"
 
-ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec(Zulu, "8"))
+ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec(Temurin, "8"))
 ThisBuild / githubWorkflowPublishTargetBranches := Seq(
   RefPredicate.Equals(Ref.Branch("main")),
   RefPredicate.StartsWith(Ref.Tag("v"))
