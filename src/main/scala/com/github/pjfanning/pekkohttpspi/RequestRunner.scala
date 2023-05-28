@@ -17,6 +17,7 @@
 package com.github.pjfanning.pekkohttpspi
 
 import java.util.concurrent.CompletableFuture
+import java.util.Collections
 
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.http.scaladsl.model.{ContentTypes, HttpResponse}
@@ -28,7 +29,6 @@ import software.amazon.awssdk.http.SdkHttpFullResponse
 import software.amazon.awssdk.http.async.SdkAsyncHttpResponseHandler
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.jdk.CollectionConverters._
 
 class RequestRunner()(implicit sys: ActorSystem, ec: ExecutionContext, mat: Materializer) {
 
@@ -57,23 +57,30 @@ class RequestRunner()(implicit sys: ActorSystem, ec: ExecutionContext, mat: Mate
 
   private[pekkohttpspi] def toSdkHttpFullResponse(response: HttpResponse): SdkHttpFullResponse = {
     SdkHttpFullResponse.builder()
-      .headers(convertToSdkResponseHeaders(response).map { case (k, v) => k -> v.asJava }.asJava)
+      .headers(convertToSdkResponseHeaders(response))
       .statusCode(response.status.intValue())
       .statusText(response.status.reason)
       .build
   }
 
-  private[pekkohttpspi] def convertToSdkResponseHeaders(response: HttpResponse): Map[String, Seq[String]] = {
-    val contentType = response.entity.contentType match {
-      case ContentTypes.NoContentType => Map.empty[String, List[String]]
-      case contentType => Map(`Content-Type`.name -> List(contentType.value))
+  private[pekkohttpspi] def convertToSdkResponseHeaders(response: HttpResponse): java.util.Map[String, java.util.List[String]] = {
+    val responseHeaders = new java.util.HashMap[String, java.util.List[String]]
+
+    response.entity.contentType match {
+      case ContentTypes.NoContentType => ()
+      case contentType => responseHeaders.put(`Content-Type`.name, Collections.singletonList(contentType.value))
     }
 
-    val contentLength = response.entity.contentLengthOption
-      .map(length => `Content-Length`.name -> List(length.toString)).toMap
+    response.entity.contentLengthOption.foreach(length =>
+      responseHeaders.put(`Content-Length`.name, Collections.singletonList(length.toString))
+    )
 
-    val headers = response.headers.groupBy(_.name()).map { case (k, v) => k -> v.map(_.value()) }
+    response.headers.groupBy(_.name()).foreach { case (k, v) =>
+      val values = new java.util.ArrayList[String]
+      v.foreach(header => values.add(header.value()))
+      responseHeaders.put(k, values)
+    }
 
-    headers ++ contentType ++ contentLength
+    responseHeaders
   }
 }

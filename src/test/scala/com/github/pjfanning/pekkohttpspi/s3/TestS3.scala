@@ -25,7 +25,6 @@ import software.amazon.awssdk.core.async.{AsyncRequestBody, AsyncResponseTransfo
 import software.amazon.awssdk.services.s3.{S3AsyncClient, S3Configuration}
 import software.amazon.awssdk.services.s3.model._
 
-import scala.jdk.CollectionConverters._
 import scala.concurrent.duration._
 import scala.language.postfixOps
 import scala.util.Random
@@ -37,7 +36,7 @@ class TestS3 extends BaseAwsClientTest[S3AsyncClient] {
       val bucketName = createBucket()
       val buckets = client.listBuckets().join
       buckets.buckets() should have size (1)
-      buckets.buckets().asScala.toList.head.name() should be(bucketName)
+      buckets.buckets().get(0).name() should be(bucketName)
     }
 
     "upload and download a file to a bucket" in withClient { implicit client =>

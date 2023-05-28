@@ -30,7 +30,6 @@ import software.amazon.awssdk.http.SdkHttpResponse
 import software.amazon.awssdk.http.async.SdkAsyncHttpResponseHandler
 
 import scala.concurrent.Future
-import scala.jdk.CollectionConverters._
 
 class RequestRunnerSpec extends AnyWordSpec with Matchers with OptionValues {
   "Check headers are present from response" in {
@@ -42,9 +41,9 @@ class RequestRunnerSpec extends AnyWordSpec with Matchers with OptionValues {
     val resp = runner.run(() => Future.successful(response), handler)
     resp.join()
 
-    handler.responseHeaders.headers().asScala.get("User-Agent").value.asScala.headOption.value shouldBe "Mozilla"
-    handler.responseHeaders.headers().asScala.get("Content-Type").value.asScala.headOption.value shouldBe "text/plain; charset=UTF-8"
-    handler.responseHeaders.headers().asScala.get("Content-Length").value.asScala.headOption.value shouldBe "2"
+    handler.responseHeaders.headers().get("User-Agent").get(0) shouldBe "Mozilla"
+    handler.responseHeaders.headers().get("Content-Type").get(0) shouldBe "text/plain; charset=UTF-8"
+    handler.responseHeaders.headers().get("Content-Length").get(0) shouldBe "2"
   }
 
   class MyHeaderHandler() extends SdkAsyncHttpResponseHandler {
