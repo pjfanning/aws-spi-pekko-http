@@ -22,6 +22,8 @@ ThisBuild / githubWorkflowPublish := Seq(
   )
 )
 
+ThisBuild / githubWorkflowBuild := Seq(WorkflowStep.Sbt(List("it:compile", "test"), name = Some("Build project")))
+
 ThisBuild / mimaPreviousArtifacts := Set.empty
 ThisBuild / resolvers += "Apache Nexus Snapshots".at("https://repository.apache.org/content/repositories/snapshots/")
 
