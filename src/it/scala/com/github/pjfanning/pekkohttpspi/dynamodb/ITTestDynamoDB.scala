@@ -16,15 +16,13 @@
 
 package com.github.pjfanning.pekkohttpspi.dynamodb
 
-import com.github.pjfanning.pekkohttpspi.{PekkoHttpAsyncHttpService, TestBase}
+import com.github.pjfanning.pekkohttpspi.{FutureConverters, PekkoHttpAsyncHttpService, TestBase}
 import org.scalatest.concurrent.{Eventually, Futures, IntegrationPatience}
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
 import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient
 import software.amazon.awssdk.services.dynamodb.model._
 import org.scalatest.concurrent.ScalaFutures._
-
-import scala.compat.java8.FutureConverters._
 
 class ITTestDynamoDB
     extends AnyWordSpec
@@ -80,10 +78,11 @@ class ITTestDynamoDB
       desc.tableName() should be(tableName)
 
       eventually {
-        val response = client.describeTable(DescribeTableRequest.builder().tableName(tableName).build()).toScala
+        val response =
+          FutureConverters.asScala(client.describeTable(DescribeTableRequest.builder().tableName(tableName).build()))
         response.futureValue.table().tableStatus() should be(TableStatus.ACTIVE)
       }
-      client.deleteTable(DeleteTableRequest.builder().tableName(tableName).build()).toScala
+      FutureConverters.asScala(client.deleteTable(DeleteTableRequest.builder().tableName(tableName).build()))
 
     }
   }

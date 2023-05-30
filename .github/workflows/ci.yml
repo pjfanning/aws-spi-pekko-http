@@ -55,7 +55,7 @@ jobs:
         run: sbt githubWorkflowCheck
 
       - name: Build project
-        run: sbt '++ ${{ matrix.scala }}' test
+        run: 'sbt ''++ ${{ matrix.scala }}'' it:compile test'
 
       - name: Make target directories
         if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
