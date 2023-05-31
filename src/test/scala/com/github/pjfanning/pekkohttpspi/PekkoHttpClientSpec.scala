@@ -18,8 +18,9 @@ package com.github.pjfanning.pekkohttpspi
 
 import java.util.Collections
 
-import org.apache.pekko.http.scaladsl.model.headers.`Content-Type`
-import org.apache.pekko.http.scaladsl.model.MediaTypes
+import org.apache.pekko
+import pekko.http.scaladsl.model.headers.`Content-Type`
+import pekko.http.scaladsl.model.MediaTypes
 import org.scalatest.OptionValues
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
