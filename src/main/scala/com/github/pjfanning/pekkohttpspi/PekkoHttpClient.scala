@@ -18,18 +18,19 @@ package com.github.pjfanning.pekkohttpspi
 
 import java.util.concurrent.{CompletableFuture, TimeUnit}
 
-import org.apache.pekko.actor.{ActorSystem, ClassicActorSystemProvider}
-import org.apache.pekko.http.scaladsl.Http
-import org.apache.pekko.http.scaladsl.model.HttpHeader.ParsingResult
-import org.apache.pekko.http.scaladsl.model.HttpHeader.ParsingResult.Ok
-import org.apache.pekko.http.scaladsl.model.MediaType.Compressible
-import org.apache.pekko.http.scaladsl.model.RequestEntityAcceptance.Expected
-import org.apache.pekko.http.scaladsl.model._
-import org.apache.pekko.http.scaladsl.model.headers.{`Content-Length`, `Content-Type`}
-import org.apache.pekko.http.scaladsl.settings.ConnectionPoolSettings
-import org.apache.pekko.stream.scaladsl.Source
-import org.apache.pekko.stream.{ActorMaterializer, Materializer, SystemMaterializer}
-import org.apache.pekko.util.ByteString
+import org.apache.pekko
+import pekko.actor.{ActorSystem, ClassicActorSystemProvider}
+import pekko.http.scaladsl.Http
+import pekko.http.scaladsl.model.HttpHeader.ParsingResult
+import pekko.http.scaladsl.model.HttpHeader.ParsingResult.Ok
+import pekko.http.scaladsl.model.MediaType.Compressible
+import pekko.http.scaladsl.model.RequestEntityAcceptance.Expected
+import pekko.http.scaladsl.model._
+import pekko.http.scaladsl.model.headers.{`Content-Length`, `Content-Type`}
+import pekko.http.scaladsl.settings.ConnectionPoolSettings
+import pekko.stream.scaladsl.Source
+import pekko.stream.{ActorMaterializer, Materializer, SystemMaterializer}
+import pekko.util.ByteString
 import org.slf4j.LoggerFactory
 import software.amazon.awssdk.http.async._
 import software.amazon.awssdk.http.SdkHttpRequest

@@ -19,11 +19,12 @@ package com.github.pjfanning.pekkohttpspi
 import java.util.concurrent.CompletableFuture
 import java.util.Collections
 
-import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.http.scaladsl.model.{ContentTypes, HttpResponse}
-import org.apache.pekko.http.scaladsl.model.headers.{`Content-Length`, `Content-Type`}
-import org.apache.pekko.stream.Materializer
-import org.apache.pekko.stream.scaladsl.{Keep, Sink}
+import org.apache.pekko
+import pekko.actor.ActorSystem
+import pekko.http.scaladsl.model.{ContentTypes, HttpResponse}
+import pekko.http.scaladsl.model.headers.{`Content-Length`, `Content-Type`}
+import pekko.stream.Materializer
+import pekko.stream.scaladsl.{Keep, Sink}
 import org.slf4j.LoggerFactory
 import software.amazon.awssdk.http.SdkHttpFullResponse
 import software.amazon.awssdk.http.async.SdkAsyncHttpResponseHandler

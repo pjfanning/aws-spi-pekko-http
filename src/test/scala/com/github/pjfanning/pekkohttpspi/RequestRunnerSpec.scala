@@ -19,9 +19,10 @@ package com.github.pjfanning.pekkohttpspi
 import java.nio.ByteBuffer
 import java.util.concurrent.atomic.AtomicReference
 
-import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.http.scaladsl.model.headers.`User-Agent`
-import org.apache.pekko.http.scaladsl.model.{HttpEntity, HttpResponse}
+import org.apache.pekko
+import pekko.actor.ActorSystem
+import pekko.http.scaladsl.model.headers.`User-Agent`
+import pekko.http.scaladsl.model.{HttpEntity, HttpResponse}
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 import org.scalatest.OptionValues
 import org.scalatest.matchers.should.Matchers
