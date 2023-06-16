@@ -74,8 +74,8 @@ lazy val root = (project in file("."))
 
 lazy val deps = {
   val awsSDKVersion    = "2.17.113"
-  val pekkoVersion     = "0.0.0+26669-ec5b6764-SNAPSHOT"
-  val pekkoHttpVersion = "0.0.0+4411-6fe04045-SNAPSHOT"
+  val pekkoVersion     = "0.0.0+26720-01379c41-SNAPSHOT"
+  val pekkoHttpVersion = "0.0.0+4431-0dc1da23-SNAPSHOT"
 
   Seq(
     "org.apache.pekko"      %% "pekko-stream"    % pekkoVersion,
