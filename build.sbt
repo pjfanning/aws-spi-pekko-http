@@ -4,6 +4,7 @@ ThisBuild / organization       := "com.github.pjfanning"
 ThisBuild / crossScalaVersions := List("2.12.18", "2.13.11", "3.3.0")
 ThisBuild / scalaVersion       := "2.13.11"
 
+ThisBuild / tlSonatypeUseLegacyHost := true
 ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec(Zulu, "8"))
 ThisBuild / githubWorkflowPublishTargetBranches := Seq(
   RefPredicate.Equals(Ref.Branch("main")),
@@ -74,8 +75,8 @@ lazy val root = (project in file("."))
 
 lazy val deps = {
   val awsSDKVersion    = "2.17.113"
-  val pekkoVersion     = "0.0.0+26720-01379c41-SNAPSHOT"
-  val pekkoHttpVersion = "0.0.0+4431-0dc1da23-SNAPSHOT"
+  val pekkoVersion     = "1.0.0"
+  val pekkoHttpVersion = "0.0.0+4468-963bd592-SNAPSHOT"
 
   Seq(
     "org.apache.pekko"      %% "pekko-stream"    % pekkoVersion,
@@ -88,8 +89,8 @@ lazy val deps = {
     "software.amazon.awssdk" % "kinesis" % awsSDKVersion % "test" exclude ("software.amazon.awssdk", "netty-nio-client"),
     "com.dimafeng"      %% "testcontainers-scala" % "0.40.14"  % "test",
     "junit"              % "junit"                % "4.13.2"   % "test",
-    "org.scalatest"     %% "scalatest"            % "3.2.15"   % "it,test",
-    "org.scalatestplus" %% "junit-4-13"           % "3.2.15.0" % "it,test",
+    "org.scalatest"     %% "scalatest"            % "3.2.16"   % "it,test",
+    "org.scalatestplus" %% "junit-4-13"           % "3.2.16.0" % "it,test",
     "ch.qos.logback"     % "logback-classic"      % "1.2.12"   % "it,test"
   )
 }
