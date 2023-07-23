@@ -121,19 +121,17 @@ public class S3Test extends JUnitSuite {
   }
 
   private S3AsyncClient getAsyncClient(SdkAsyncHttpClient pekkoClient) throws URISyntaxException {
-    return S3AsyncClient
-            .builder()
-            .serviceConfiguration(
-                    S3Configuration.builder()
-                            .checksumValidationEnabled(false)
-                            .pathStyleAccessEnabled(true)
-                            .build()
-            )
-            .credentialsProvider(AnonymousCredentialsProvider.create())
-            .endpointOverride(new URI("http://localhost:" + s3mock.getMappedPort(9090)))
-            .region(Region.of("s3"))
-            .httpClient(pekkoClient)
-            .build();
+    return S3AsyncClient.builder()
+        .serviceConfiguration(
+            S3Configuration.builder()
+                .checksumValidationEnabled(false)
+                .pathStyleAccessEnabled(true)
+                .build())
+        .credentialsProvider(AnonymousCredentialsProvider.create())
+        .endpointOverride(new URI("http://localhost:" + s3mock.getMappedPort(9090)))
+        .region(Region.of("s3"))
+        .httpClient(pekkoClient)
+        .build();
   }
 
   String randomString(int len) {
