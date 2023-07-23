@@ -4,7 +4,7 @@ ThisBuild / organization       := "com.github.pjfanning"
 ThisBuild / crossScalaVersions := List("2.12.18", "2.13.11", "3.3.0")
 ThisBuild / scalaVersion       := "2.13.11"
 
-ThisBuild / tlSonatypeUseLegacyHost := true
+ThisBuild / tlSonatypeUseLegacyHost    := true
 ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec(Zulu, "8"))
 ThisBuild / githubWorkflowPublishTargetBranches := Seq(
   RefPredicate.Equals(Ref.Branch("main")),

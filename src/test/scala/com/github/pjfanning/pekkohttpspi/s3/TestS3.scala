@@ -105,9 +105,9 @@ class TestS3 extends BaseAwsClientTest[S3AsyncClient] {
             .multipartUpload(
               CompletedMultipartUpload
                 .builder()
-                .parts(
-                  CompletedPart.builder().partNumber(1).eTag(p1.eTag()).build(),
-                  CompletedPart.builder().partNumber(2).eTag(p2.eTag()).build())
+                .parts(CompletedPart.builder().partNumber(1).eTag(p1.eTag()).build(),
+                       CompletedPart.builder().partNumber(2).eTag(p2.eTag()).build()
+                )
                 .build()
             )
             .uploadId(createMultipartUploadResponse.uploadId())
