@@ -60,10 +60,10 @@ class TestS3 extends BaseAwsClientTest[S3AsyncClient] {
       result.response().contentLength() shouldEqual fileContent.getBytes().length
     }
 
-    "multipart upload" ignore withClient { implicit client =>
+    "multipart upload" in withClient { implicit client =>
       val bucketName  = createBucket()
       val randomFile  = File.createTempFile("aws1", Random.alphanumeric.take(5).mkString)
-      val fileContent = Random.alphanumeric.take(1000).mkString
+      val fileContent = (0 to 1000000).mkString
       val fileWriter  = new FileWriter(randomFile)
       fileWriter.write(fileContent)
       fileWriter.flush()
@@ -137,7 +137,13 @@ class TestS3 extends BaseAwsClientTest[S3AsyncClient] {
 
     val client = S3AsyncClient
       .builder()
-      .serviceConfiguration(S3Configuration.builder().checksumValidationEnabled(false).build())
+      .serviceConfiguration(
+        S3Configuration
+          .builder()
+          .checksumValidationEnabled(false)
+          .pathStyleAccessEnabled(true)
+          .build()
+      )
       .credentialsProvider(AnonymousCredentialsProvider.create)
       .endpointOverride(endpoint)
       .httpClient(pekkoClient)

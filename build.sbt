@@ -4,7 +4,7 @@ ThisBuild / organization       := "com.github.pjfanning"
 ThisBuild / crossScalaVersions := List("2.12.18", "2.13.11", "3.3.0")
 ThisBuild / scalaVersion       := "2.13.11"
 
-ThisBuild / tlSonatypeUseLegacyHost := true
+ThisBuild / tlSonatypeUseLegacyHost    := true
 ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec(Zulu, "8"))
 ThisBuild / githubWorkflowPublishTargetBranches := Seq(
   RefPredicate.Equals(Ref.Branch("main")),
@@ -87,7 +87,7 @@ lazy val deps = {
     "software.amazon.awssdk" % "sqs" % awsSDKVersion % "test" exclude ("software.amazon.awssdk", "netty-nio-client"),
     "software.amazon.awssdk" % "sns" % awsSDKVersion % "test" exclude ("software.amazon.awssdk", "netty-nio-client"),
     "software.amazon.awssdk" % "kinesis" % awsSDKVersion % "test" exclude ("software.amazon.awssdk", "netty-nio-client"),
-    "com.dimafeng"      %% "testcontainers-scala" % "0.40.14"  % "test",
+    "com.dimafeng"      %% "testcontainers-scala" % "0.40.17"  % "test",
     "junit"              % "junit"                % "4.13.2"   % "test",
     "org.scalatest"     %% "scalatest"            % "3.2.16"   % "it,test",
     "org.scalatestplus" %% "junit-4-13"           % "3.2.16.0" % "it,test",

@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.SecureRandom;
 import java.util.concurrent.TimeUnit;
 
@@ -59,15 +60,7 @@ public class S3Test extends JUnitSuite {
     try {
       pekkoClient = new PekkoHttpAsyncHttpService().createAsyncHttpClientFactory().build();
 
-      client =
-          S3AsyncClient.builder()
-              .serviceConfiguration(
-                  S3Configuration.builder().checksumValidationEnabled(false).build())
-              .credentialsProvider(AnonymousCredentialsProvider.create())
-              .endpointOverride(new URI("http://localhost:" + s3mock.getMappedPort(9090)))
-              .region(Region.of("s3"))
-              .httpClient(pekkoClient)
-              .build();
+      client = getAsyncClient(pekkoClient);
 
       createBucketAndAssert(client);
     } finally {
@@ -89,15 +82,7 @@ public class S3Test extends JUnitSuite {
               .withActorSystem(system)
               .build();
 
-      client =
-          S3AsyncClient.builder()
-              .serviceConfiguration(
-                  S3Configuration.builder().checksumValidationEnabled(false).build())
-              .credentialsProvider(AnonymousCredentialsProvider.create())
-              .endpointOverride(new URI("http://localhost:" + s3mock.getMappedPort(9090)))
-              .region(Region.of("s3"))
-              .httpClient(pekkoClient)
-              .build();
+      client = getAsyncClient(pekkoClient);
 
       createBucketAndAssert(client);
     } finally {
@@ -133,6 +118,20 @@ public class S3Test extends JUnitSuite {
             .join();
 
     assertEquals(fileContent, result.asUtf8String());
+  }
+
+  private S3AsyncClient getAsyncClient(SdkAsyncHttpClient pekkoClient) throws URISyntaxException {
+    return S3AsyncClient.builder()
+        .serviceConfiguration(
+            S3Configuration.builder()
+                .checksumValidationEnabled(false)
+                .pathStyleAccessEnabled(true)
+                .build())
+        .credentialsProvider(AnonymousCredentialsProvider.create())
+        .endpointOverride(new URI("http://localhost:" + s3mock.getMappedPort(9090)))
+        .region(Region.of("s3"))
+        .httpClient(pekkoClient)
+        .build();
   }
 
   String randomString(int len) {
