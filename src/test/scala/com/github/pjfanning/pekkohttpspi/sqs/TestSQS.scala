@@ -16,15 +16,15 @@
 
 package com.github.pjfanning.pekkohttpspi.sqs
 
-import com.github.pjfanning.pekkohttpspi.{PekkoHttpAsyncHttpService, LocalstackBaseAwsClientTest}
+import com.github.pjfanning.pekkohttpspi.{PekkoHttpAsyncHttpService, ElasticMQSQSBaseAwsClientTest}
 import software.amazon.awssdk.auth.credentials.{AwsBasicCredentials, StaticCredentialsProvider}
 import software.amazon.awssdk.services.sqs.SqsAsyncClient
 import software.amazon.awssdk.services.sqs.model._
 
-class TestSQS extends LocalstackBaseAwsClientTest[SqsAsyncClient] {
+class TestSQS extends ElasticMQSQSBaseAwsClientTest[SqsAsyncClient] {
   "Async SQS client" should {
 
-    "publish a message to a queue" ignore withClient { implicit client =>
+    "publish a message to a queue" in withClient { implicit client =>
       client.createQueue(CreateQueueRequest.builder().queueName("foo").build()).join()
       client
         .sendMessage(SendMessageRequest.builder().queueUrl(s"$endpoint/queue/foo").messageBody("123").build())
@@ -35,7 +35,7 @@ class TestSQS extends LocalstackBaseAwsClientTest[SqsAsyncClient] {
       receivedMessage.messages().get(0).body() should be("123")
     }
 
-    "delete a message" ignore withClient { implicit client =>
+    "delete a message" in withClient { implicit client =>
       client.createQueue(CreateQueueRequest.builder().queueName("foo").build()).join()
       client
         .sendMessage(SendMessageRequest.builder().queueUrl(s"$endpoint/queue/foo").messageBody("123").build())
