@@ -24,7 +24,7 @@ import software.amazon.awssdk.services.sqs.model._
 class TestSQS extends ElasticMQSQSBaseAwsClientTest[SqsAsyncClient] {
   "Async SQS client" should {
 
-    "publish a message to a queue" ignore withClient { implicit client =>
+    "publish a message to a queue" in withClient { implicit client =>
       client.createQueue(CreateQueueRequest.builder().queueName("foo").build()).join()
       client
         .sendMessage(SendMessageRequest.builder().queueUrl(s"$endpoint/queue/foo").messageBody("123").build())
@@ -35,7 +35,7 @@ class TestSQS extends ElasticMQSQSBaseAwsClientTest[SqsAsyncClient] {
       receivedMessage.messages().get(0).body() should be("123")
     }
 
-    "delete a message" ignore withClient { implicit client =>
+    "delete a message" in withClient { implicit client =>
       client.createQueue(CreateQueueRequest.builder().queueName("foo").build()).join()
       client
         .sendMessage(SendMessageRequest.builder().queueUrl(s"$endpoint/queue/foo").messageBody("123").build())
