@@ -16,12 +16,12 @@
 
 package com.github.pjfanning.pekkohttpspi.sqs
 
-import com.github.pjfanning.pekkohttpspi.{PekkoHttpAsyncHttpService, LocalstackBaseAwsClientTest}
+import com.github.pjfanning.pekkohttpspi.{PekkoHttpAsyncHttpService, ElasticMQSQSBaseAwsClientTest}
 import software.amazon.awssdk.auth.credentials.{AwsBasicCredentials, StaticCredentialsProvider}
 import software.amazon.awssdk.services.sqs.SqsAsyncClient
 import software.amazon.awssdk.services.sqs.model._
 
-class TestSQS extends LocalstackBaseAwsClientTest[SqsAsyncClient] {
+class TestSQS extends ElasticMQSQSBaseAwsClientTest[SqsAsyncClient] {
   "Async SQS client" should {
 
     "publish a message to a queue" ignore withClient { implicit client =>
