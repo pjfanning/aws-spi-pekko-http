@@ -50,7 +50,7 @@ public class S3Test extends JUnitSuite {
 
   @Rule
   public GenericContainer s3mock =
-      new GenericContainer<>("adobe/s3mock:2.1.24").withExposedPorts(9090);
+      new GenericContainer<>("adobe/s3mock:2.17.0").withExposedPorts(9090);
 
   @Test
   public void testS3() throws Exception {
