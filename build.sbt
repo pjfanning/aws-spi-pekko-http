@@ -39,7 +39,7 @@ lazy val commonSettings = Seq(
   ),
   description := "An alternative non-blocking async http engine for aws-sdk-java-v2 based on pekko-http",
   name        := "aws-spi-pekko-http",
-  licenses += ("Apache-2.0", new URL("https://www.apache.org/licenses/LICENSE-2.0.txt")),
+  licenses += ("Apache-2.0", new URL("https://github.com/pjfanning/aws-spi-pekko-http/blob/main/LICENSE")),
   startYear            := Some(2023),
   homepage             := Some(url("https://github.com/pjfanning/aws-spi-pekko-http")),
   organizationHomepage := Some(url("https://github.com/pjfanning/aws-spi-pekko-http")),
