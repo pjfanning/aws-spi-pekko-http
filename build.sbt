@@ -26,7 +26,6 @@ ThisBuild / githubWorkflowPublish := Seq(
 ThisBuild / githubWorkflowBuild := Seq(WorkflowStep.Sbt(List("it:compile", "test"), name = Some("Build project")))
 
 ThisBuild / mimaPreviousArtifacts := Set.empty
-ThisBuild / resolvers += "Apache Nexus Snapshots".at("https://repository.apache.org/content/repositories/snapshots/")
 
 val isScala3 = Def.setting(scalaBinaryVersion.value == "3")
 
@@ -76,7 +75,7 @@ lazy val root = (project in file("."))
 lazy val deps = {
   val awsSDKVersion    = "2.17.113"
   val pekkoVersion     = "1.0.1"
-  val pekkoHttpVersion = "0.0.0+4468-963bd592-SNAPSHOT"
+  val pekkoHttpVersion = "1.0.0"
 
   Seq(
     "org.apache.pekko"      %% "pekko-stream"    % pekkoVersion,
