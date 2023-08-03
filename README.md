@@ -1,6 +1,8 @@
 # AWS Pekko-Http SPI implementation 
 
-[![Continuous Integration](https://pjfanning/aws-spi-pekko-http/actions/workflows/ci.yml/badge.svg)](https://github.com/pjfanning/aws-spi-pekko-http/actions/workflows/ci.yml)
+<!--
+[![Continuous Integration](https://github.com/pjfanning/aws-spi-pekko-http/actions/workflows/ci.yml/badge.svg)](https://github.com/pjfanning/aws-spi-pekko-http/actions/workflows/ci.yml)
+-->
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.pjfanning/aws-spi-pekko-http_2.13/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.pjfanning/aws-spi-pekko-http_2.13)
 [![License](http://img.shields.io/:license-Apache%202-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
