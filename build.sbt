@@ -73,7 +73,7 @@ lazy val root = (project in file("."))
   )
 
 lazy val deps = {
-  val awsSDKVersion    = "2.17.113"
+  val awsSDKVersion    = "2.20.162"
   val pekkoVersion     = "1.0.1"
   val pekkoHttpVersion = "1.0.0"
 
