@@ -29,7 +29,7 @@ import pekko.http.scaladsl.model._
 import pekko.http.scaladsl.model.headers.{`Content-Length`, `Content-Type`}
 import pekko.http.scaladsl.settings.ConnectionPoolSettings
 import pekko.stream.scaladsl.Source
-import pekko.stream.{ActorMaterializer, Materializer, SystemMaterializer}
+import pekko.stream.{Materializer, SystemMaterializer}
 import pekko.util.ByteString
 import org.slf4j.LoggerFactory
 import software.amazon.awssdk.http.async._
