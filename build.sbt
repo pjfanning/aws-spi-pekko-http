@@ -1,11 +1,8 @@
-import org.typelevel.sbt.gha.JavaSpec.Distribution.Zulu
-
 ThisBuild / organization       := "com.github.pjfanning"
-ThisBuild / crossScalaVersions := List("2.12.18", "2.13.11", "3.3.0")
-ThisBuild / scalaVersion       := "2.13.11"
+ThisBuild / crossScalaVersions := List("2.12.18", "2.13.12", "3.3.1")
+ThisBuild / scalaVersion       := "2.13.12"
 
-ThisBuild / tlSonatypeUseLegacyHost    := true
-ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec(Zulu, "8"))
+ThisBuild / githubWorkflowTargetTags ++= Seq("v*")
 ThisBuild / githubWorkflowPublishTargetBranches := Seq(
   RefPredicate.Equals(Ref.Branch("main")),
   RefPredicate.StartsWith(Ref.Tag("v"))
@@ -24,8 +21,6 @@ ThisBuild / githubWorkflowPublish := Seq(
 )
 
 ThisBuild / githubWorkflowBuild := Seq(WorkflowStep.Sbt(List("it:compile", "test"), name = Some("Build project")))
-
-ThisBuild / mimaPreviousArtifacts := Set.empty
 
 val isScala3 = Def.setting(scalaBinaryVersion.value == "3")
 
@@ -86,10 +81,10 @@ lazy val deps = {
     "software.amazon.awssdk" % "sqs" % awsSDKVersion % "test" exclude ("software.amazon.awssdk", "netty-nio-client"),
     "software.amazon.awssdk" % "sns" % awsSDKVersion % "test" exclude ("software.amazon.awssdk", "netty-nio-client"),
     "software.amazon.awssdk" % "kinesis" % awsSDKVersion % "test" exclude ("software.amazon.awssdk", "netty-nio-client"),
-    "com.dimafeng"      %% "testcontainers-scala" % "0.41.0"  % "test",
+    "com.dimafeng"      %% "testcontainers-scala" % "0.41.0"   % "test",
     "junit"              % "junit"                % "4.13.2"   % "test",
-    "org.scalatest"     %% "scalatest"            % "3.2.16"   % "it,test",
-    "org.scalatestplus" %% "junit-4-13"           % "3.2.16.0" % "it,test",
+    "org.scalatest"     %% "scalatest"            % "3.2.17"   % "it,test",
+    "org.scalatestplus" %% "junit-4-13"           % "3.2.17.0" % "it,test",
     "ch.qos.logback"     % "logback-classic"      % "1.2.12"   % "it,test"
   )
 }
