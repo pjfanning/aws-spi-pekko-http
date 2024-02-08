@@ -70,7 +70,7 @@ lazy val root = (project in file("."))
 lazy val deps = {
   val awsSDKVersion    = "2.23.11"
   val pekkoVersion     = "1.0.2"
-  val pekkoHttpVersion = "1.0.0"
+  val pekkoHttpVersion = "1.0.1"
 
   Seq(
     "org.apache.pekko"      %% "pekko-stream"    % pekkoVersion,
@@ -83,8 +83,8 @@ lazy val deps = {
     "software.amazon.awssdk" % "kinesis" % awsSDKVersion % "test" exclude ("software.amazon.awssdk", "netty-nio-client"),
     "com.dimafeng"      %% "testcontainers-scala" % "0.41.0"   % "test",
     "junit"              % "junit"                % "4.13.2"   % "test",
-    "org.scalatest"     %% "scalatest"            % "3.2.17"   % "it,test",
-    "org.scalatestplus" %% "junit-4-13"           % "3.2.17.0" % "it,test",
+    "org.scalatest"     %% "scalatest"            % "3.2.18"   % "it,test",
+    "org.scalatestplus" %% "junit-4-13"           % "3.2.18.0" % "it,test",
     "ch.qos.logback"     % "logback-classic"      % "1.2.13"   % "it,test"
   )
 }
