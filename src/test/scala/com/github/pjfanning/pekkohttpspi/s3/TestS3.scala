@@ -124,21 +124,28 @@ class TestS3 extends BaseAwsClientTest[S3AsyncClient] {
     }
 
     "upload and head request gzip file with 0 content-length" in withClient { implicit client =>
-      val bucketName = createBucket()
-      val fileName = "my-empty-file"
-      val contentLength = 0L
-      val contentType = "application/json"
+      val bucketName      = createBucket()
+      val fileName        = "my-empty-file"
+      val contentLength   = 0L
+      val contentType     = "application/json"
       val contentEncoding = "gzip"
 
       client
-        .putObject(PutObjectRequest.builder().bucket(bucketName).key(fileName).contentType(contentType).contentLength(contentLength).contentEncoding(contentEncoding).build(),
-                   AsyncRequestBody.fromString("")
+        .putObject(
+          PutObjectRequest
+            .builder()
+            .bucket(bucketName)
+            .key(fileName)
+            .contentType(contentType)
+            .contentLength(contentLength)
+            .contentEncoding(contentEncoding)
+            .build(),
+          AsyncRequestBody.fromString("")
         )
         .join
 
       val result = client
-        .headObject(HeadObjectRequest.builder().bucket(bucketName).key(fileName).build()
-        )
+        .headObject(HeadObjectRequest.builder().bucket(bucketName).key(fileName).build())
         .join
 
       result.contentLength() should be(contentLength)
