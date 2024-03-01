@@ -40,6 +40,7 @@ class RequestRunner()(implicit sys: ActorSystem, ec: ExecutionContext, mat: Mate
       handler.onHeaders(toSdkHttpFullResponse(response))
 
       val (complete, publisher) = response.entity.dataBytes
+        .filter(_.nonEmpty)
         .map(_.asByteBuffer)
         .alsoToMat(Sink.ignore)(Keep.right)
         .toMat(Sink.asPublisher(fanout = false))(Keep.both)
