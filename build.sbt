@@ -59,12 +59,7 @@ lazy val root = (project in file("."))
     publishMavenStyle      := true,
     Test / publishArtifact := false,
     pomIncludeRepository   := (_ => false),
-    publishTo := Some(
-      if (version.value.trim.endsWith("SNAPSHOT"))
-        "snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
-      else
-        "releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-    )
+    publishTo := sonatypePublishToBundle.value
   )
 
 lazy val deps = {
