@@ -1,14 +1,12 @@
 # AWS Pekko-Http SPI implementation 
 
-<!--
 [![Continuous Integration](https://github.com/pjfanning/aws-spi-pekko-http/actions/workflows/ci.yml/badge.svg)](https://github.com/pjfanning/aws-spi-pekko-http/actions/workflows/ci.yml)
--->
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.pjfanning/aws-spi-pekko-http_2.13/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.pjfanning/aws-spi-pekko-http_2.13)
 [![License](http://img.shields.io/:license-Apache%202-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 This library implements the provided [SPI](https://en.wikipedia.org/wiki/Service_provider_interface) for the asynchronous 
 and non-blocking http calls in the new [AWS Java SDK](https://github.com/aws/aws-sdk-java-v2) with 
-[Apache Pekko HTTP](https://github.com/apache/incubator-pekko-http).
+[Apache Pekko HTTP](https://github.com/apache/pekko-http).
 
 This is an alternative implementation to the built-in netty-based async http engine in the AWS SDK. Use at your own risk.
 
