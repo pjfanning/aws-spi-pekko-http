@@ -19,9 +19,9 @@ package com.github.pjfanning.pekkohttpspi
 
 import java.net.URI
 
-import com.dimafeng.testcontainers.{ForAllTestContainer, GenericContainer}
+import com.dimafeng.testcontainers.{ ForAllTestContainer, GenericContainer }
 import com.github.pjfanning.pekkohttpspi.testcontainers.LocalStackReadyLogWaitStrategy
-import org.scalatest.concurrent.{Eventually, Futures, IntegrationPatience}
+import org.scalatest.concurrent.{ Eventually, Futures, IntegrationPatience }
 import org.scalatest.BeforeAndAfter
 import software.amazon.awssdk.core.SdkClient
 import software.amazon.awssdk.regions.Region
@@ -44,7 +44,7 @@ trait BaseAwsClientTest[C <: SdkClient]
   def exposedServicePort: Int
   def container: GenericContainer
 
-  def endpoint                              = new URI(s"http://localhost:${container.mappedPort(exposedServicePort)}")
+  def endpoint = new URI(s"http://localhost:${container.mappedPort(exposedServicePort)}")
   def randomIdentifier(length: Int): String = Random.alphanumeric.take(length).mkString
 }
 
@@ -58,8 +58,7 @@ trait LocalstackBaseAwsClientTest[C <: SdkClient] extends BaseAwsClientTest[C] {
       dockerImage = "localstack/localstack",
       exposedPorts = Seq(exposedServicePort),
       env = Map("SERVICES" -> service),
-      waitStrategy = Some(LocalStackReadyLogWaitStrategy)
-    )
+      waitStrategy = Some(LocalStackReadyLogWaitStrategy))
 }
 
 trait ElasticMQSQSBaseAwsClientTest[C <: SdkClient] extends BaseAwsClientTest[C] {
@@ -70,6 +69,5 @@ trait ElasticMQSQSBaseAwsClientTest[C <: SdkClient] extends BaseAwsClientTest[C]
   override lazy val container: GenericContainer =
     new GenericContainer(
       dockerImage = "softwaremill/elasticmq-native",
-      exposedPorts = Seq(exposedServicePort)
-    )
+      exposedPorts = Seq(exposedServicePort))
 }

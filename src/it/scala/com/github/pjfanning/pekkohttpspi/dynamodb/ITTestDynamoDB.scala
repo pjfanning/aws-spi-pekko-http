@@ -17,8 +17,8 @@
 
 package com.github.pjfanning.pekkohttpspi.dynamodb
 
-import com.github.pjfanning.pekkohttpspi.{FutureConverters, PekkoHttpAsyncHttpService, TestBase}
-import org.scalatest.concurrent.{Eventually, Futures, IntegrationPatience}
+import com.github.pjfanning.pekkohttpspi.{ FutureConverters, PekkoHttpAsyncHttpService, TestBase }
+import org.scalatest.concurrent.{ Eventually, Futures, IntegrationPatience }
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
 import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient
@@ -54,9 +54,9 @@ class ITTestDynamoDB
 
   "DynamoDB" should {
     "create a table" in withClient { implicit client =>
-      val tableName  = s"Movies-${randomIdentifier(5)}"
+      val tableName = s"Movies-${randomIdentifier(5)}"
       val attributes = AttributeDefinition.builder.attributeName("film_id").attributeType(ScalarAttributeType.S).build()
-      val keySchema  = KeySchemaElement.builder.attributeName("film_id").keyType(KeyType.HASH).build()
+      val keySchema = KeySchemaElement.builder.attributeName("film_id").keyType(KeyType.HASH).build()
 
       val result = client
         .createTable(
@@ -69,10 +69,8 @@ class ITTestDynamoDB
               ProvisionedThroughput.builder
                 .readCapacityUnits(1L)
                 .writeCapacityUnits(1L)
-                .build()
-            )
-            .build()
-        )
+                .build())
+            .build())
         .join
 
       val desc = result.tableDescription()

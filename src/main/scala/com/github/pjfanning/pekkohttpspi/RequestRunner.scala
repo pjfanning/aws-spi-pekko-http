@@ -22,15 +22,15 @@ import java.util.Collections
 
 import org.apache.pekko
 import pekko.actor.ActorSystem
-import pekko.http.scaladsl.model.{ContentTypes, HttpResponse}
-import pekko.http.scaladsl.model.headers.{`Content-Length`, `Content-Type`}
+import pekko.http.scaladsl.model.{ ContentTypes, HttpResponse }
+import pekko.http.scaladsl.model.headers.{ `Content-Length`, `Content-Type` }
 import pekko.stream.Materializer
-import pekko.stream.scaladsl.{Keep, Sink}
+import pekko.stream.scaladsl.{ Keep, Sink }
 import org.slf4j.LoggerFactory
 import software.amazon.awssdk.http.SdkHttpFullResponse
 import software.amazon.awssdk.http.async.SdkAsyncHttpResponseHandler
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 class RequestRunner()(implicit sys: ActorSystem, ec: ExecutionContext, mat: Materializer) {
 
@@ -64,18 +64,16 @@ class RequestRunner()(implicit sys: ActorSystem, ec: ExecutionContext, mat: Mate
       .build
 
   private[pekkohttpspi] def convertToSdkResponseHeaders(
-      response: HttpResponse
-  ): java.util.Map[String, java.util.List[String]] = {
+      response: HttpResponse): java.util.Map[String, java.util.List[String]] = {
     val responseHeaders = new java.util.HashMap[String, java.util.List[String]]
 
     response.entity.contentType match {
       case ContentTypes.NoContentType => ()
-      case contentType => responseHeaders.put(`Content-Type`.name, Collections.singletonList(contentType.value))
+      case contentType                => responseHeaders.put(`Content-Type`.name, Collections.singletonList(contentType.value))
     }
 
     response.entity.contentLengthOption.foreach(length =>
-      responseHeaders.put(`Content-Length`.name, Collections.singletonList(length.toString))
-    )
+      responseHeaders.put(`Content-Length`.name, Collections.singletonList(length.toString)))
 
     response.headers.groupBy(_.name()).foreach { case (k, v) =>
       val values = new java.util.ArrayList[String]

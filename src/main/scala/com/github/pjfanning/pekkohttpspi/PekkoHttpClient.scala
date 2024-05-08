@@ -17,20 +17,20 @@
 
 package com.github.pjfanning.pekkohttpspi
 
-import java.util.concurrent.{CompletableFuture, TimeUnit}
+import java.util.concurrent.{ CompletableFuture, TimeUnit }
 
 import org.apache.pekko
-import pekko.actor.{ActorSystem, ClassicActorSystemProvider}
+import pekko.actor.{ ActorSystem, ClassicActorSystemProvider }
 import pekko.http.scaladsl.Http
 import pekko.http.scaladsl.model.HttpHeader.ParsingResult
 import pekko.http.scaladsl.model.HttpHeader.ParsingResult.Ok
 import pekko.http.scaladsl.model.MediaType.Compressible
 import pekko.http.scaladsl.model.RequestEntityAcceptance.Expected
 import pekko.http.scaladsl.model._
-import pekko.http.scaladsl.model.headers.{`Content-Length`, `Content-Type`}
+import pekko.http.scaladsl.model.headers.{ `Content-Length`, `Content-Type` }
 import pekko.http.scaladsl.settings.ConnectionPoolSettings
 import pekko.stream.scaladsl.Source
-import pekko.stream.{Materializer, SystemMaterializer}
+import pekko.stream.{ Materializer, SystemMaterializer }
 import pekko.util.ByteString
 import org.slf4j.LoggerFactory
 import software.amazon.awssdk.http.async._
@@ -39,13 +39,12 @@ import software.amazon.awssdk.utils.AttributeMap
 
 import scala.collection.immutable
 import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, ExecutionContext}
+import scala.concurrent.{ Await, ExecutionContext }
 
 class PekkoHttpClient(shutdownHandle: () => Unit, connectionSettings: ConnectionPoolSettings)(implicit
     actorSystem: ActorSystem,
     ec: ExecutionContext,
-    mat: Materializer
-) extends SdkAsyncHttpClient {
+    mat: Materializer) extends SdkAsyncHttpClient {
   import PekkoHttpClient._
 
   lazy val runner = new RequestRunner()
@@ -54,8 +53,7 @@ class PekkoHttpClient(shutdownHandle: () => Unit, connectionSettings: Connection
     val pekkoHttpRequest = toPekkoRequest(request.request(), request.requestContentPublisher())
     runner.run(
       () => Http().singleRequest(pekkoHttpRequest, settings = connectionSettings),
-      request.responseHandler()
-    )
+      request.responseHandler())
   }
 
   override def close(): Unit =
@@ -69,24 +67,21 @@ object PekkoHttpClient {
   val logger = LoggerFactory.getLogger(this.getClass)
 
   private[pekkohttpspi] def toPekkoRequest(request: SdkHttpRequest,
-                                           contentPublisher: SdkHttpContentPublisher
-  ): HttpRequest = {
+      contentPublisher: SdkHttpContentPublisher): HttpRequest = {
     val (contentTypeHeader, reqheaders) = convertHeaders(request.headers())
-    val method                          = convertMethod(request.method().name())
+    val method = convertMethod(request.method().name())
     HttpRequest(
       method = method,
       uri = Uri(request.getUri.toString),
       headers = reqheaders,
       entity =
         entityForMethodAndContentType(method, contentTypeHeaderToContentType(contentTypeHeader), contentPublisher),
-      protocol = HttpProtocols.`HTTP/1.1`
-    )
+      protocol = HttpProtocols.`HTTP/1.1`)
   }
 
   private[pekkohttpspi] def entityForMethodAndContentType(method: HttpMethod,
-                                                          contentType: ContentType,
-                                                          contentPublisher: SdkHttpContentPublisher
-  ): RequestEntity =
+      contentType: ContentType,
+      contentPublisher: SdkHttpContentPublisher): RequestEntity =
     method.requestEntityAcceptance match {
       case Expected =>
         OptionConverters.toScala(contentPublisher.contentLength()) match {
@@ -117,8 +112,7 @@ object PekkoHttpClient {
 
   // This method converts the headers to Akka-http headers and drops content-length and returns content-type separately
   private[pekkohttpspi] def convertHeaders(
-      headers: java.util.Map[String, java.util.List[String]]
-  ): (Option[HttpHeader], immutable.Seq[HttpHeader]) = {
+      headers: java.util.Map[String, java.util.List[String]]): (Option[HttpHeader], immutable.Seq[HttpHeader]) = {
     val headersAsScala = {
       val builder = collection.mutable.Map.newBuilder[String, java.util.List[String]]
       headers.forEach { case (k, v) => builder += k -> v }
@@ -131,8 +125,7 @@ object PekkoHttpClient {
         throw new IllegalArgumentException(
           s"Found invalid header: key: $headerName, Value: ${val list = List.newBuilder[String]
             headerValue.forEach(v => list += v)
-            list.result() }."
-        )
+            list.result()}.")
       }
       // skip content-length as it will be calculated by pekko-http itself and must not be provided in the request headers
       if (`Content-Length`.lowercaseName == headerName.toLowerCase) (ctHeader, hdrs)
@@ -160,20 +153,19 @@ object PekkoHttpClient {
   def builder() = PekkoHttpClientBuilder()
 
   case class PekkoHttpClientBuilder(private val actorSystem: Option[ActorSystem] = None,
-                                    private val executionContext: Option[ExecutionContext] = None,
-                                    private val connectionPoolSettings: Option[ConnectionPoolSettings] = None
-  ) extends SdkAsyncHttpClient.Builder[PekkoHttpClientBuilder] {
+      private val executionContext: Option[ExecutionContext] = None,
+      private val connectionPoolSettings: Option[ConnectionPoolSettings] = None)
+      extends SdkAsyncHttpClient.Builder[PekkoHttpClientBuilder] {
     def buildWithDefaults(attributeMap: AttributeMap): SdkAsyncHttpClient = {
-      implicit val as       = actorSystem.getOrElse(ActorSystem("aws-pekko-http"))
-      implicit val ec       = executionContext.getOrElse(as.dispatcher)
+      implicit val as = actorSystem.getOrElse(ActorSystem("aws-pekko-http"))
+      implicit val ec = executionContext.getOrElse(as.dispatcher)
       val mat: Materializer = SystemMaterializer(as).materializer
 
       val cps = connectionPoolSettings.getOrElse(ConnectionPoolSettings(as))
       val shutdownhandleF = () => {
         if (actorSystem.isEmpty) {
           Await.result(Http().shutdownAllConnectionPools().flatMap(_ => as.terminate()),
-                       Duration.apply(10, TimeUnit.SECONDS)
-          )
+            Duration.apply(10, TimeUnit.SECONDS))
         }
         ()
       }
@@ -188,7 +180,7 @@ object PekkoHttpClient {
       copy(connectionPoolSettings = Some(connectionPoolSettings))
   }
 
-  lazy val xAmzJson   = ContentType(MediaType.customBinary("application", "x-amz-json-1.0", Compressible))
+  lazy val xAmzJson = ContentType(MediaType.customBinary("application", "x-amz-json-1.0", Compressible))
   lazy val xAmzJson11 = ContentType(MediaType.customBinary("application", "x-amz-json-1.1", Compressible))
   lazy val xAmzCbor11 = ContentType(MediaType.customBinary("application", "x-amz-cbor-1.1", Compressible))
   lazy val formUrlEncoded =
@@ -196,11 +188,10 @@ object PekkoHttpClient {
   lazy val applicationXml = ContentType(MediaType.customBinary("application", "xml", Compressible))
 
   lazy val contentTypeMap: collection.immutable.Map[String, ContentType] = collection.immutable.Map(
-    "application/x-amz-json-1.0"                       -> xAmzJson,
-    "application/x-amz-json-1.1"                       -> xAmzJson11,
-    "application/x-amz-cbor-1.1"                       -> xAmzCbor11, // used by Kinesis
+    "application/x-amz-json-1.0" -> xAmzJson,
+    "application/x-amz-json-1.1" -> xAmzJson11,
+    "application/x-amz-cbor-1.1" -> xAmzCbor11, // used by Kinesis
     "application/x-www-form-urlencoded; charset-UTF-8" -> formUrlEncoded,
-    "application/x-www-form-urlencoded"                -> formUrlEncoded,
-    "application/xml"                                  -> applicationXml
-  )
+    "application/x-www-form-urlencoded" -> formUrlEncoded,
+    "application/xml" -> applicationXml)
 }

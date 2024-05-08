@@ -17,8 +17,8 @@
 
 package com.github.pjfanning.pekkohttpspi.sqs
 
-import com.github.pjfanning.pekkohttpspi.{PekkoHttpAsyncHttpService, ElasticMQSQSBaseAwsClientTest}
-import software.amazon.awssdk.auth.credentials.{AwsBasicCredentials, StaticCredentialsProvider}
+import com.github.pjfanning.pekkohttpspi.{ ElasticMQSQSBaseAwsClientTest, PekkoHttpAsyncHttpService }
+import software.amazon.awssdk.auth.credentials.{ AwsBasicCredentials, StaticCredentialsProvider }
 import software.amazon.awssdk.services.sqs.SqsAsyncClient
 import software.amazon.awssdk.services.sqs.model._
 
@@ -52,8 +52,7 @@ class TestSQS extends ElasticMQSQSBaseAwsClientTest[SqsAsyncClient] {
             .builder()
             .queueUrl(s"$endpoint/queue/foo")
             .receiptHandle(receivedMessages.messages().get(0).receiptHandle())
-            .build()
-        )
+            .build())
         .join()
 
       val receivedMessage = client
@@ -63,8 +62,7 @@ class TestSQS extends ElasticMQSQSBaseAwsClientTest[SqsAsyncClient] {
             .queueUrl(s"$endpoint/queue/foo")
             .maxNumberOfMessages(1)
             .waitTimeSeconds(1)
-            .build()
-        )
+            .build())
         .join()
       receivedMessage.messages() shouldBe java.util.Collections.EMPTY_LIST
     }

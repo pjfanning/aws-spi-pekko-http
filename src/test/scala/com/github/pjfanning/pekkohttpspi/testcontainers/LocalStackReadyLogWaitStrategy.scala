@@ -17,18 +17,19 @@
 
 package com.github.pjfanning.pekkohttpspi.testcontainers
 
-import java.util.concurrent.{TimeUnit, TimeoutException}
+import java.util.concurrent.{ TimeUnit, TimeoutException }
 import java.util.function.Predicate
 
 import org.testcontainers.DockerClientFactory
 import org.testcontainers.containers.ContainerLaunchException
-import org.testcontainers.containers.output.{OutputFrame, WaitingConsumer}
+import org.testcontainers.containers.output.{ OutputFrame, WaitingConsumer }
 import org.testcontainers.containers.wait.strategy.AbstractWaitStrategy
 import org.testcontainers.utility.LogUtils
 
-/** This strategy is based on the container log "Ready." from Localstack. Once it's printed out, the container is good
-  * to go.
-  */
+/**
+ * This strategy is based on the container log "Ready." from Localstack. Once it's printed out, the container is good
+ * to go.
+ */
 object LocalStackReadyLogWaitStrategy extends AbstractWaitStrategy {
   override def waitUntilReady(): Unit = {
     val waitingConsumer = new WaitingConsumer

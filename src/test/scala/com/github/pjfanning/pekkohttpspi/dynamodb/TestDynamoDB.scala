@@ -17,8 +17,8 @@
 
 package com.github.pjfanning.pekkohttpspi.dynamodb
 
-import com.github.pjfanning.pekkohttpspi.{PekkoHttpAsyncHttpService, LocalstackBaseAwsClientTest}
-import software.amazon.awssdk.auth.credentials.{AwsBasicCredentials, StaticCredentialsProvider}
+import com.github.pjfanning.pekkohttpspi.{ LocalstackBaseAwsClientTest, PekkoHttpAsyncHttpService }
+import software.amazon.awssdk.auth.credentials.{ AwsBasicCredentials, StaticCredentialsProvider }
 import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient
 import software.amazon.awssdk.services.dynamodb.model._
 
@@ -26,7 +26,7 @@ class TestDynamoDB extends LocalstackBaseAwsClientTest[DynamoDbAsyncClient] {
   "DynamoDB" should {
     "create a table" in withClient { implicit client =>
       val attributes = AttributeDefinition.builder.attributeName("film_id").attributeType(ScalarAttributeType.S).build()
-      val keySchema  = KeySchemaElement.builder.attributeName("film_id").keyType(KeyType.HASH).build()
+      val keySchema = KeySchemaElement.builder.attributeName("film_id").keyType(KeyType.HASH).build()
 
       val emptyTableResult = client.listTables().join()
       emptyTableResult.tableNames() should have size 0
@@ -39,10 +39,8 @@ class TestDynamoDB extends LocalstackBaseAwsClientTest[DynamoDbAsyncClient] {
             .attributeDefinitions(attributes)
             .keySchema(keySchema)
             .provisionedThroughput(
-              ProvisionedThroughput.builder.readCapacityUnits(1000L).writeCapacityUnits(1000L).build()
-            )
-            .build()
-        )
+              ProvisionedThroughput.builder.readCapacityUnits(1000L).writeCapacityUnits(1000L).build())
+            .build())
         .join
 
       val desc = result.tableDescription()

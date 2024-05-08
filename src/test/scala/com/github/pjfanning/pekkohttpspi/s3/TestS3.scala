@@ -17,13 +17,13 @@
 
 package com.github.pjfanning.pekkohttpspi.s3
 
-import java.io.{File, FileWriter}
+import java.io.{ File, FileWriter }
 import com.dimafeng.testcontainers.GenericContainer
-import com.github.pjfanning.pekkohttpspi.{PekkoHttpAsyncHttpService, BaseAwsClientTest}
+import com.github.pjfanning.pekkohttpspi.{ BaseAwsClientTest, PekkoHttpAsyncHttpService }
 import com.github.pjfanning.pekkohttpspi.testcontainers.TimeoutWaitStrategy
 import software.amazon.awssdk.auth.credentials.AnonymousCredentialsProvider
-import software.amazon.awssdk.core.async.{AsyncRequestBody, AsyncResponseTransformer}
-import software.amazon.awssdk.services.s3.{S3AsyncClient, S3Configuration}
+import software.amazon.awssdk.core.async.{ AsyncRequestBody, AsyncResponseTransformer }
+import software.amazon.awssdk.services.s3.{ S3AsyncClient, S3Configuration }
 import software.amazon.awssdk.services.s3.model._
 
 import scala.concurrent.duration._
@@ -35,25 +35,23 @@ class TestS3 extends BaseAwsClientTest[S3AsyncClient] {
   "Async S3 client" should {
     "create bucket" in withClient { implicit client =>
       val bucketName = createBucket()
-      val buckets    = client.listBuckets().join
+      val buckets = client.listBuckets().join
       buckets.buckets() should have size 1
       buckets.buckets().get(0).name() should be(bucketName)
     }
 
     "upload and download a file to a bucket" in withClient { implicit client =>
-      val bucketName  = createBucket()
+      val bucketName = createBucket()
       val fileContent = 0 to 1000 mkString
 
       client
         .putObject(PutObjectRequest.builder().bucket(bucketName).key("my-file").contentType("text/plain").build(),
-                   AsyncRequestBody.fromString(fileContent)
-        )
+          AsyncRequestBody.fromString(fileContent))
         .join
 
       val result = client
         .getObject(GetObjectRequest.builder().bucket(bucketName).key("my-file").build(),
-                   AsyncResponseTransformer.toBytes[GetObjectResponse]()
-        )
+          AsyncResponseTransformer.toBytes[GetObjectResponse]())
         .join
 
       result.asUtf8String() should be(fileContent)
@@ -62,39 +60,36 @@ class TestS3 extends BaseAwsClientTest[S3AsyncClient] {
     }
 
     "multipart upload" in withClient { implicit client =>
-      val bucketName  = createBucket()
-      val randomFile  = File.createTempFile("aws1", Random.alphanumeric.take(5).mkString)
+      val bucketName = createBucket()
+      val randomFile = File.createTempFile("aws1", Random.alphanumeric.take(5).mkString)
       val fileContent = (0 to 1000000).mkString
-      val fileWriter  = new FileWriter(randomFile)
+      val fileWriter = new FileWriter(randomFile)
       fileWriter.write(fileContent)
       fileWriter.flush()
       val createMultipartUploadResponse = client
         .createMultipartUpload(
-          CreateMultipartUploadRequest.builder().bucket(bucketName).key("bar").contentType("text/plain").build()
-        )
+          CreateMultipartUploadRequest.builder().bucket(bucketName).key("bar").contentType("text/plain").build())
         .join()
 
       val p1 = client
         .uploadPart(UploadPartRequest
-                      .builder()
-                      .bucket(bucketName)
-                      .key("bar")
-                      .partNumber(1)
-                      .uploadId(createMultipartUploadResponse.uploadId())
-                      .build(),
-                    randomFile.toPath
-        )
+            .builder()
+            .bucket(bucketName)
+            .key("bar")
+            .partNumber(1)
+            .uploadId(createMultipartUploadResponse.uploadId())
+            .build(),
+          randomFile.toPath)
         .join
       val p2 = client
         .uploadPart(UploadPartRequest
-                      .builder()
-                      .bucket(bucketName)
-                      .key("bar")
-                      .partNumber(2)
-                      .uploadId(createMultipartUploadResponse.uploadId())
-                      .build(),
-                    randomFile.toPath
-        )
+            .builder()
+            .bucket(bucketName)
+            .key("bar")
+            .partNumber(2)
+            .uploadId(createMultipartUploadResponse.uploadId())
+            .build(),
+          randomFile.toPath)
         .join
 
       client
@@ -107,28 +102,24 @@ class TestS3 extends BaseAwsClientTest[S3AsyncClient] {
               CompletedMultipartUpload
                 .builder()
                 .parts(CompletedPart.builder().partNumber(1).eTag(p1.eTag()).build(),
-                       CompletedPart.builder().partNumber(2).eTag(p2.eTag()).build()
-                )
-                .build()
-            )
+                  CompletedPart.builder().partNumber(2).eTag(p2.eTag()).build())
+                .build())
             .uploadId(createMultipartUploadResponse.uploadId())
-            .build()
-        )
+            .build())
         .join
 
       val result = client
         .getObject(GetObjectRequest.builder().bucket(bucketName).key("bar").build(),
-                   AsyncResponseTransformer.toBytes[GetObjectResponse]()
-        )
+          AsyncResponseTransformer.toBytes[GetObjectResponse]())
         .join
       result.asUtf8String() should be(fileContent + fileContent)
     }
 
     "upload and head request gzip file with 0 content-length" in withClient { implicit client =>
-      val bucketName      = createBucket()
-      val fileName        = "my-empty-file"
-      val contentLength   = 0L
-      val contentType     = "application/json"
+      val bucketName = createBucket()
+      val fileName = "my-empty-file"
+      val contentLength = 0L
+      val contentType = "application/json"
       val contentEncoding = "gzip"
 
       client
@@ -141,8 +132,7 @@ class TestS3 extends BaseAwsClientTest[S3AsyncClient] {
             .contentLength(contentLength)
             .contentEncoding(contentEncoding)
             .build(),
-          AsyncRequestBody.fromString("")
-        )
+          AsyncRequestBody.fromString(""))
         .join
 
       val result = client
@@ -173,8 +163,7 @@ class TestS3 extends BaseAwsClientTest[S3AsyncClient] {
           .builder()
           .checksumValidationEnabled(false)
           .pathStyleAccessEnabled(true)
-          .build()
-      )
+          .build())
       .credentialsProvider(AnonymousCredentialsProvider.create)
       .endpointOverride(endpoint)
       .httpClient(pekkoClient)
@@ -194,6 +183,5 @@ class TestS3 extends BaseAwsClientTest[S3AsyncClient] {
   override lazy val container: GenericContainer = new GenericContainer(
     dockerImage = "adobe/s3mock:2.17.0",
     exposedPorts = Seq(exposedServicePort),
-    waitStrategy = Some(TimeoutWaitStrategy(10 seconds))
-  )
+    waitStrategy = Some(TimeoutWaitStrategy(10 seconds)))
 }

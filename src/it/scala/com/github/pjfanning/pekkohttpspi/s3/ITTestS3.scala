@@ -17,12 +17,12 @@
 
 package com.github.pjfanning.pekkohttpspi.s3
 
-import java.io.{File, FileWriter}
-import com.github.pjfanning.pekkohttpspi.{PekkoHttpAsyncHttpService, TestBase}
+import java.io.{ File, FileWriter }
+import com.github.pjfanning.pekkohttpspi.{ PekkoHttpAsyncHttpService, TestBase }
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
-import software.amazon.awssdk.core.async.{AsyncRequestBody, AsyncResponseTransformer}
-import software.amazon.awssdk.services.s3.{S3AsyncClient, S3Configuration}
+import software.amazon.awssdk.core.async.{ AsyncRequestBody, AsyncResponseTransformer }
+import software.amazon.awssdk.services.s3.{ S3AsyncClient, S3Configuration }
 import software.amazon.awssdk.services.s3.model._
 
 import scala.util.Random
@@ -53,17 +53,16 @@ class ITTestS3 extends AnyWordSpec with Matchers with TestBase {
     "upload and download a file to a bucket + cleanup" in withClient(checksumEnabled = true) { implicit client =>
       val bucketName = "aws-spi-test-" + Random.alphanumeric.take(10).filterNot(_.isUpper).mkString
       createBucket(bucketName)
-      val randomFile  = File.createTempFile("aws", Random.alphanumeric.take(5).mkString)
+      val randomFile = File.createTempFile("aws", Random.alphanumeric.take(5).mkString)
       val fileContent = Random.alphanumeric.take(1000).mkString
-      val fileWriter  = new FileWriter(randomFile)
+      val fileWriter = new FileWriter(randomFile)
       fileWriter.write(fileContent)
       fileWriter.flush()
       client.putObject(PutObjectRequest.builder().bucket(bucketName).key("my-file").build(), randomFile.toPath).join
 
       val result = client
         .getObject(GetObjectRequest.builder().bucket(bucketName).key("my-file").build(),
-                   AsyncResponseTransformer.toBytes[GetObjectResponse]()
-        )
+          AsyncResponseTransformer.toBytes[GetObjectResponse]())
         .join
       result.asUtf8String() should be(fileContent)
 
@@ -78,8 +77,7 @@ class ITTestS3 extends AnyWordSpec with Matchers with TestBase {
       val fileContent = (0 to 1000000).mkString
       val createMultipartUploadResponse = client
         .createMultipartUpload(
-          CreateMultipartUploadRequest.builder().bucket(bucketName).key("bar").contentType("text/plain").build()
-        )
+          CreateMultipartUploadRequest.builder().bucket(bucketName).key("bar").contentType("text/plain").build())
         .join()
 
       val p1 = client
@@ -91,8 +89,7 @@ class ITTestS3 extends AnyWordSpec with Matchers with TestBase {
             .partNumber(1)
             .uploadId(createMultipartUploadResponse.uploadId())
             .build(),
-          AsyncRequestBody.fromString(fileContent)
-        )
+          AsyncRequestBody.fromString(fileContent))
         .join
       val p2 = client
         .uploadPart(
@@ -103,8 +100,7 @@ class ITTestS3 extends AnyWordSpec with Matchers with TestBase {
             .partNumber(2)
             .uploadId(createMultipartUploadResponse.uploadId())
             .build(),
-          AsyncRequestBody.fromString(fileContent)
-        )
+          AsyncRequestBody.fromString(fileContent))
         .join
 
       client
@@ -118,18 +114,14 @@ class ITTestS3 extends AnyWordSpec with Matchers with TestBase {
               CompletedMultipartUpload
                 .builder()
                 .parts(CompletedPart.builder().partNumber(1).eTag(p1.eTag()).build(),
-                       CompletedPart.builder().partNumber(2).eTag(p2.eTag()).build()
-                )
-                .build()
-            )
-            .build()
-        )
+                  CompletedPart.builder().partNumber(2).eTag(p2.eTag()).build())
+                .build())
+            .build())
         .join
 
       val result = client
         .getObject(GetObjectRequest.builder().bucket(bucketName).key("bar").build(),
-                   AsyncResponseTransformer.toBytes[GetObjectResponse]()
-        )
+          AsyncResponseTransformer.toBytes[GetObjectResponse]())
         .join
       result.asUtf8String() should be(fileContent + fileContent)
 

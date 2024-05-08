@@ -32,7 +32,7 @@ class PekkoHttpClientSpec extends AnyWordSpec with Matchers with OptionValues {
 
     "parse custom content type" in {
       val contentTypeStr = "application/xml"
-      val contentType    = PekkoHttpClient.tryCreateCustomContentType(contentTypeStr)
+      val contentType = PekkoHttpClient.tryCreateCustomContentType(contentTypeStr)
       contentType.mediaType should be(MediaTypes.`application/xml`)
     }
 
