@@ -10,6 +10,10 @@ and non-blocking http calls in the new [AWS Java SDK](https://github.com/aws/aws
 
 This is an alternative implementation to the built-in netty-based async http engine in the AWS SDK. Use at your own risk.
 
+If you are using Pekko HTTP 1.1 or Pekko Connectors 1.1, you should use
+
+    "org.apache.pekko" %% "pekko-connectors-aws-spi-pekko-http" % "1.1.x"
+
 This is a fork of [matsluni/aws-spi-akka-http](https://github.com/matsluni/aws-spi-akka-http).
 
 ## Usage
